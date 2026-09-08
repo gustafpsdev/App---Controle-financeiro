@@ -1,154 +1,179 @@
-# ✈️ Controle Financeiro para Viagens
+# TravelCash — Dashboard Financeiro para Viagens
 
-API REST para planejamento e controle financeiro de viagens: cadastre viagens com orçamento definido, registre despesas por categoria e acompanhe em tempo real quanto do orçamento já foi utilizado.
+Aplicação full-stack de controle financeiro de viagens: um **dashboard** que reproduz a
+tela de referência do projeto e um **backend REST** completo com CRUD para todos os
+recursos. Frontend em HTML/CSS/JS puro (sem framework), backend em Node.js + Express e
+persistência local em arquivo JSON.
 
-## 📌 Problema escolhido
+## Stack
 
-Quem viaja costuma perder o controle dos gastos: as despesas acontecem em momentos e lugares diferentes (alimentação, transporte, hospedagem, passeios) e, sem um registro centralizado, o viajante só percebe que estourou o orçamento quando já é tarde. Planilhas manuais são trabalhosas e não dão visibilidade imediata do saldo disponível.
+- Node.js 18+
+- Express 4
+- CORS
+- Persistência local em `data/db.json` (sem banco externo)
+- Frontend em HTML + CSS + JavaScript puro (SPA leve, sem framework)
 
-## 💡 Solução proposta
+## Como executar
 
-Uma API de controle financeiro focada em viagens. O usuário cadastra uma viagem com destino, período e orçamento total; ao longo da viagem registra cada despesa com valor, data e categoria. A API consolida tudo automaticamente e expõe um resumo financeiro com total gasto, saldo disponível, percentual do orçamento utilizado e gastos agrupados por categoria — permitindo decisões rápidas ("ainda posso fazer aquele passeio?") com base em dados reais.
-
-## 👥 Integrantes
-
-| Nome | Responsabilidade |
-|------|------------------|
-| Gustavo Paiva | Documentação Swagger, GitHub e README |
-| Arthur | Coparticipação no back-end (deploy) |
-| Pereira | GitHub e README |
-| *(completar com os demais integrantes e RMs)* | |
-
-## 🛠️ Tecnologias utilizadas
-
-- **Python 3.11+**
-- **FastAPI** — framework web com geração automática de documentação OpenAPI/Swagger
-- **SQLAlchemy 2.0** — ORM
-- **SQLite** — banco de dados relacional (arquivo local, sem instalação)
-- **Pydantic v2** — validação de dados e schemas
-- **Uvicorn** — servidor ASGI
-
-## 🏗️ Arquitetura inicial
-
-Arquitetura em camadas, com separação entre rotas, schemas (validação) e modelos (persistência):
-
+```bash
+npm install
+npm start
 ```
-trip-budget-api/
-├── app/
-│   ├── main.py            # Ponto de entrada — cria a aplicação e registra as rotas
-│   ├── database.py        # Conexão com o banco (SQLAlchemy + SQLite)
-│   ├── models.py          # Modelos ORM (tabelas: usuarios, viagens, despesas)
-│   ├── schemas.py         # Schemas Pydantic (requisições/respostas + exemplos)
-│   └── routers/
-│       ├── usuarios.py    # Endpoints de usuários
-│       ├── viagens.py     # Endpoints de viagens + resumo financeiro
-│       └── despesas.py    # Endpoints de despesas (aninhados em viagens)
-├── requirements.txt
-├── .env.example
+
+Depois abra no navegador:
+
+```text
+http://localhost:3000
+```
+
+Para desenvolvimento com reload automático:
+
+```bash
+npm run dev
+```
+
+O dashboard consome o backend em `GET /api/dashboard?tripId=1`.
+
+## Organização do projeto
+
+```text
+travelcash-dashboard/
+├── data/
+│   └── db.json           # "banco de dados" em arquivo (estado inicial + dados gravados)
+├── public/               # frontend servido como estático pelo Express
+│   ├── index.html        # dashboard + seções (abas) + modais de cadastro
+│   ├── styles.css        # identidade visual
+│   └── app.js            # SPA: navegação, render das telas e chamadas à API
+├── src/
+│   └── store.js          # camada de acesso ao db.json (list/get/create/update/remove)
+├── server.js             # servidor Express + rotas REST + regra do dashboard
+├── package.json
 └── README.md
 ```
 
-Modelo de dados: **Usuário** (1) → (N) **Viagem** (1) → (N) **Despesa**.
+A separação é intencional: **rota** (server.js), **armazenamento** (store.js),
+**regra do dashboard** (endpoint `/api/dashboard`) e **interface** (public/) ficam
+isolados. Trocar o `store.js` por um banco relacional (PostgreSQL/MySQL) no futuro não
+exige mudar as rotas nem o frontend — o contrato REST permanece o mesmo.
 
-## ⚙️ Instalação
+## Entidades
 
-Pré-requisito: Python 3.11 ou superior.
+| Recurso        | Rota base           | Campos obrigatórios (POST)                             |
+|----------------|---------------------|--------------------------------------------------------|
+| Usuários       | `/api/users`        | `name`, `email`                                        |
+| Viagens        | `/api/trips`        | `name`, `startDate`, `endDate`                         |
+| Orçamentos     | `/api/budgets`      | `tripId`, `totalBudget`                                |
+| Despesas       | `/api/expenses`     | `tripId`, `category`, `description`, `amount`, `date`  |
+| Roteiro        | `/api/itinerary`    | `tripId`, `date`, `title`                              |
+| Transportes    | `/api/transports`   | `tripId`, `type`, `description`, `amount`              |
+| Seguros        | `/api/insurances`   | `tripId`, `provider`, `coverage`                       |
+| Metas          | `/api/goals`        | `name`, `targetAmount`, `currentAmount`                |
+| Alertas        | `/api/alerts`       | `tripId`, `type`, `title`, `message`                   |
 
-```bash
-# 1. Clonar o repositório
-git clone https://github.com/gustafpsdev/trip-budget-api.git
-cd trip-budget-api
+> `transports` e `insurances` existem no backend e são consumidos pelo dashboard,
+> mas ainda não têm aba própria no frontend.
 
-# 2. Criar e ativar o ambiente virtual
-python -m venv .venv
-source .venv/bin/activate        # Linux/macOS
-.venv\Scripts\activate           # Windows
+## API REST
 
-# 3. Instalar as dependências
-pip install -r requirements.txt
+Todas as respostas seguem um formato padronizado.
+
+**Sucesso:**
+
+```json
+{
+  "success": true,
+  "data": {}
+}
 ```
 
-## 🔐 Configuração das variáveis de ambiente
+**Erro:**
 
-Copie o arquivo de exemplo e ajuste se necessário:
-
-```bash
-cp .env.example .env
+```json
+{
+  "success": false,
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Campos obrigatórios ausentes."
+  }
+}
 ```
 
-| Variável | Descrição | Padrão |
-|----------|-----------|--------|
-| `DATABASE_URL` | String de conexão do banco | `sqlite:///./viagens.db` |
+### CRUD (para cada recurso da tabela acima)
 
-> Com o padrão SQLite, nenhuma configuração extra é necessária — o banco é criado automaticamente na primeira execução.
+- `GET    /api/{recurso}`          — lista todos (aceita `?tripId=` como filtro)
+- `GET    /api/{recurso}/:id`      — busca por id
+- `POST   /api/{recurso}`          — cria (valida os campos obrigatórios)
+- `PUT    /api/{recurso}/:id`      — atualiza
+- `DELETE /api/{recurso}/:id`      — remove
 
-## ▶️ Execução
+### Rotas especiais
 
-```bash
-uvicorn app.main:app --reload
+- `GET /api/health` — status do servidor.
+- `GET /api/dashboard?tripId=1` — agrega os dados de uma viagem e devolve os
+  indicadores prontos: totais, saldo, % de utilização, média diária, gastos por
+  categoria, roteiro, alertas, despesas recentes e metas.
+
+### Exemplos
+
+Criar uma despesa:
+
+```http
+POST /api/expenses
+Content-Type: application/json
+
+{
+  "tripId": 1,
+  "category": "Alimentação",
+  "description": "Jantar",
+  "amount": 120,
+  "date": "2025-06-05"
+}
 ```
 
-A API sobe em `http://localhost:8000`. As tabelas do banco são criadas automaticamente na inicialização.
+Atualizar:
 
-## 🗄️ Banco de dados
+```http
+PUT /api/expenses/1
+Content-Type: application/json
 
-**SQLite** — banco relacional em arquivo (`viagens.db`), criado automaticamente pelo SQLAlchemy na primeira execução. Foi escolhido pela simplicidade de setup em ambiente acadêmico; a string de conexão em `DATABASE_URL` permite trocar por PostgreSQL/MySQL sem alterar o código.
-
-Tabelas: `usuarios`, `viagens`, `despesas` (com chaves estrangeiras e exclusão em cascata).
-
-## 🔗 Principais endpoints
-
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| `POST` | `/usuarios` | Cadastrar usuário |
-| `GET` | `/usuarios` | Listar usuários |
-| `GET` | `/usuarios/{id}` | Buscar usuário por ID |
-| `POST` | `/viagens` | Criar viagem (destino, período, orçamento) |
-| `GET` | `/viagens` | Listar viagens (filtro opcional `?usuario_id=`) |
-| `GET` | `/viagens/{id}` | Buscar viagem por ID |
-| `PUT` | `/viagens/{id}` | Atualizar viagem |
-| `DELETE` | `/viagens/{id}` | Excluir viagem (e suas despesas) |
-| `POST` | `/viagens/{id}/despesas` | Registrar despesa |
-| `GET` | `/viagens/{id}/despesas` | Listar despesas (filtro opcional `?categoria=`) |
-| `PUT` | `/viagens/{id}/despesas/{despesa_id}` | Atualizar despesa |
-| `DELETE` | `/viagens/{id}/despesas/{despesa_id}` | Excluir despesa |
-| `GET` | `/viagens/{id}/resumo` | Resumo financeiro (total gasto, saldo, % utilizado, gastos por categoria) |
-
-Categorias de despesa aceitas: `alimentacao`, `transporte`, `hospedagem`, `passeios`, `compras`, `outros`.
-
-### Exemplo de uso
-
-```bash
-# Criar usuário
-curl -X POST http://localhost:8000/usuarios \
-  -H "Content-Type: application/json" \
-  -d '{"nome": "Gustavo Paiva", "email": "gustavo@email.com"}'
-
-# Criar viagem
-curl -X POST http://localhost:8000/viagens \
-  -H "Content-Type: application/json" \
-  -d '{"usuario_id": 1, "destino": "Rio de Janeiro", "data_inicio": "2026-10-10", "data_fim": "2026-10-17", "orcamento": 3500}'
-
-# Registrar despesa
-curl -X POST http://localhost:8000/viagens/1/despesas \
-  -H "Content-Type: application/json" \
-  -d '{"descricao": "Jantar", "categoria": "alimentacao", "valor": 180.50, "data": "2026-10-11"}'
-
-# Consultar resumo financeiro
-curl http://localhost:8000/viagens/1/resumo
+{ "amount": 250 }
 ```
 
-## 📖 Documentação Swagger
+Excluir:
 
-Com a API em execução:
+```http
+DELETE /api/expenses/1
+```
 
-- **Swagger UI:** [http://localhost:8000/docs](http://localhost:8000/docs)
-- **ReDoc:** [http://localhost:8000/redoc](http://localhost:8000/redoc)
-- **Especificação OpenAPI (JSON):** [http://localhost:8000/openapi.json](http://localhost:8000/openapi.json)
+## Frontend — navegação por abas
 
-A documentação apresenta todos os endpoints, métodos HTTP, parâmetros, corpos de requisição, respostas possíveis, códigos HTTP e exemplos — e permite testar as requisições diretamente pelo navegador.
+A barra lateral é uma SPA simples. Cada aba abre uma área funcional reaproveitando
+cores, cartões, tipografia e espaçamento do dashboard:
 
-## 📋 Gestão do projeto
+- **Dashboard** — visão geral com indicadores, gráfico de categorias, alertas, roteiro,
+  metas e últimas despesas (dados vindos de `/api/dashboard`).
+- **Minhas Viagens** — cadastro, pesquisa por nome/destino, filtro por status,
+  indicadores (quantidade, viajantes, próxima viagem) e exclusão.
+- **Orçamentos** — orçamento da viagem atual, barra de utilização, saldo, recomendação
+  e tabela por viagem.
+- **Despesas** — cadastro, indicadores financeiros, pesquisa, filtro por
+  categoria/viagem e exclusão.
+- **Roteiro** — cadastro de atividades, contagem, custo previsto, filtro por viagem e
+  linha do tempo.
+- **Metas de Economia** — cadastro, progresso total, metas individuais e contribuição
+  a uma meta.
+- **Relatórios** — resumo, análise por categoria, comparação por viagem, impressão e
+  exportação CSV.
+- **Alertas** — cadastro, contadores por tipo, filtros e limpeza dos avisos informativos.
+- **Configurações** — perfil (via API), preferências de notificações e regras
+  financeiras (persistidas no navegador via `localStorage`).
 
-- **Trello/Notion:** *(inserir o link do board da equipe aqui)*
+Cada aba com botão **"+ Novo(a)…"** abre um modal de cadastro que envia um `POST` para a
+API correspondente e atualiza a tela ao salvar.
 
+## Observação acadêmica
+
+A persistência em JSON foi escolhida para o projeto rodar sem configuração de banco e
+deixar clara a separação entre rota, armazenamento, regra de negócio e frontend. O mesmo
+contrato REST pode ser migrado para um banco relacional em uma etapa posterior sem alterar
+a interface.
