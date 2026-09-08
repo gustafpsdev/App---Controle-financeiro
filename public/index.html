@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TravelCash — Dashboard</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">TC</div>
+        <div>
+          <div class="brand-name"><span>Travel</span>Cash</div>
+          <div class="brand-sub">Controle Financeiro<br/>para Viagens</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a class="nav-item active" href="#dashboard" data-section="dashboard"><span class="nav-icon">⌂</span>Dashboard</a>
+        <a class="nav-item" href="#trips" data-section="trips"><span class="nav-icon">▣</span>Minhas Viagens</a>
+        <a class="nav-item" href="#budgets" data-section="budgets"><span class="nav-icon">＄</span>Orçamentos</a>
+        <a class="nav-item" href="#expenses" data-section="expenses"><span class="nav-icon">▤</span>Despesas</a>
+        <a class="nav-item" href="#itinerary" data-section="itinerary"><span class="nav-icon">▦</span>Roteiro</a>
+        <a class="nav-item" href="#goals" data-section="goals"><span class="nav-icon">◎</span>Metas de Economia</a>
+        <a class="nav-item" href="#reports" data-section="reports"><span class="nav-icon">▥</span>Relatórios</a>
+        <a class="nav-item" href="#alerts" data-section="alerts"><span class="nav-icon">♟</span>Alertas</a>
+        <a class="nav-item" href="#settings" data-section="settings"><span class="nav-icon">⚙</span>Configurações</a>
+      </nav>
+
+      <div class="tip-card">
+        <div class="tip-title">Dica de Economia 💡</div>
+        <p>Você pode economizar até R$ 320,00 por mês mantendo seus gastos abaixo da média planejada!</p>
+        <button>Ver dicas</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="page-title">
+          <div class="hamburger">☰</div>
+          <div>
+            <h1>Dashboard</h1>
+            <p>Bem-vinda, Giovanna! 👋</p>
+          </div>
+        </div>
+
+        <div class="top-actions">
+          <label class="trip-filter">
+            <span>Período: <b id="periodText">01/06/2025 - 31/07/2025</b></span>
+            <span>▣</span>
+          </label>
+          <button class="icon-button notification">♧<span>3</span></button>
+          <div class="profile">
+            <div class="avatar">GP</div>
+            <span>Giovanna Pereira</span>
+            <span>⌄</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="trip-row">
+          <article class="trip-card">
+            <div class="trip-image">🏰</div>
+            <div class="trip-info">
+              <div class="trip-kicker">Viagem atual</div>
+              <h2 id="tripName">Orlando - Férias 2025</h2>
+              <p id="tripMeta">01/06/2025 até 15/06/2025 <span>•</span> 2 viajantes</p>
+            </div>
+            <span class="status" id="tripStatus">Em andamento</span>
+            <button class="outline-btn">Ver detalhes da viagem</button>
+          </article>
+
+          <article class="budget-card">
+            <div>
+              <h3>Resumo do Orçamento</h3>
+              <div class="budget-grid">
+                <div><small>Total orçado</small><strong id="budgetTotal">R$ 8.000,00</strong></div>
+                <div><small>Total gasto</small><strong class="danger" id="budgetSpent">R$ 4.850,75</strong></div>
+                <div><small>Saldo disponível</small><strong id="budgetRemaining">R$ 3.149,25</strong></div>
+                <div><small>% utilizado</small><strong class="warning" id="budgetUtilization">60,6%</strong></div>
+              </div>
+            </div>
+            <div class="donut-wrap">
+              <div class="donut"><div><b id="donutPercent">60,6%</b><span>do orçamento</span></div></div>
+            </div>
+            <div class="daily-budget">Orçamento diário restante: <b>R$ 209,95</b> ⓘ</div>
+          </article>
+        </div>
+
+        <div class="summary-cards">
+          <article class="summary-card green">
+            <div class="summary-icon">▰</div>
+            <div><small>Total Gasto</small><strong id="totalSpentCard">R$ 4.850,75</strong><span>de R$ 8.000,00</span></div>
+          </article>
+          <article class="summary-card blue">
+            <div class="summary-icon">▥</div>
+            <div><small>Média Diária</small><strong id="dailyAverage">R$ 323,38</strong><span>por dia de viagem</span></div>
+          </article>
+          <article class="summary-card orange">
+            <div class="summary-icon">◔</div>
+            <div><small>Maior Gasto</small><strong>Hospedagem</strong><span>R$ 2.100,00</span></div>
+          </article>
+          <article class="summary-card purple">
+            <div class="summary-icon">⌁</div>
+            <div><small>Score Financeiro</small><strong>85 / 100</strong><span>Muito bom! 🌟</span></div>
+          </article>
+        </div>
+
+        <div class="middle-grid">
+          <article class="panel categories">
+            <div class="panel-title"><h3>Gastos por Categoria</h3></div>
+            <div class="category-content">
+              <div class="pie" id="pie"><div class="pie-hole"><b>60,6%</b><span>utilizado</span></div></div>
+              <div class="legend" id="categoryLegend"></div>
+            </div>
+          </article>
+
+          <article class="panel evolution">
+            <div class="panel-title"><h3>Evolução dos Gastos</h3><select><option>Por dia</option></select></div>
+            <div class="chart">
+              <div class="y-axis"><span>10k</span><span>8k</span><span>6k</span><span>4k</span><span>2k</span><span>0</span></div>
+              <div class="chart-area">
+                <svg viewBox="0 0 680 260" preserveAspectRatio="none" aria-label="Evolução dos gastos">
+                  <g class="gridlines">
+                    <line x1="0" y1="18" x2="680" y2="18"/><line x1="0" y1="66" x2="680" y2="66"/>
+                    <line x1="0" y1="114" x2="680" y2="114"/><line x1="0" y1="162" x2="680" y2="162"/>
+                    <line x1="0" y1="210" x2="680" y2="210"/>
+                  </g>
+                  <polyline class="forecast" points="0,220 680,45"/>
+                  <polygon class="area" points="0,220 45,205 90,193 135,180 180,170 225,160 270,148 315,132 360,117 405,100 450,82 495,66 540,54 590,47 635,42 680,37 680,220"/>
+                  <polyline class="spent" points="0,220 45,205 90,193 135,180 180,170 225,160 270,148 315,132 360,117 405,100 450,82 495,66 540,54 590,47 635,42 680,37"/>
+                </svg>
+                <div class="x-axis"><span>01/06</span><span>03/06</span><span>05/06</span><span>07/06</span><span>09/06</span><span>11/06</span><span>13/06</span><span>15/06</span></div>
+              </div>
+            </div>
+            <div class="chart-legend"><span><i class="dot teal"></i>Gasto acumulado (R$)</span><span><i class="line"></i>Orçamento previsto (R$)</span></div>
+          </article>
+
+          <article class="alerts panel">
+            <div class="panel-title"><h3>Alertas</h3><a>Ver todos</a></div>
+            <div id="alertsList"></div>
+            <button class="alert-config">♧ &nbsp; Configurar Alertas</button>
+          </article>
+        </div>
+
+        <div class="lower-grid">
+          <article class="panel itinerary">
+            <div class="panel-title"><h3>Próximas Atividades do Roteiro</h3><a>Ver roteiro completo</a></div>
+            <div id="itineraryList"></div>
+          </article>
+
+          <article class="panel goals">
+            <div class="panel-title"><h3>Metas de Economia</h3><a>Ver todas</a></div>
+            <div id="goalsList"></div>
+          </article>
+
+          <article class="panel expenses">
+            <div class="panel-title"><h3>Últimas Despesas</h3><a>Ver todas</a></div>
+            <table>
+              <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Valor</th></tr></thead>
+              <tbody id="expensesTable"></tbody>
+            </table>
+          </article>
+        </div>
+
+
+        <section class="app-section" id="section-trips">
+          <div class="section-head"><div><h2>Minhas Viagens</h2><p>Organize destinos, datas, viajantes e o status de cada viagem.</p></div><button class="primary-btn" data-open-modal="tripModal">+ Nova viagem</button></div>
+          <div class="mini-stats four"><div><small>Viagens cadastradas</small><b id="tripCount">0</b></div><div><small>Em andamento</small><b id="tripActive">0</b></div><div><small>Próxima viagem</small><b id="tripNext">—</b></div><div><small>Viajantes</small><b id="tripTravelers">0</b></div></div>
+          <div class="toolbar"><div class="search-box">⌕<input id="tripSearch" placeholder="Pesquisar por viagem ou destino..."></div><select id="tripStatusFilter"><option value="all">Todos os status</option><option value="Em andamento">Em andamento</option><option value="Planejamento">Planejamento</option><option value="Concluída">Concluída</option></select></div>
+          <div class="section-grid cards-3" id="tripsCards"></div>
+        </section>
+
+        <section class="app-section" id="section-budgets">
+          <div class="section-head"><div><h2>Orçamentos</h2><p>Defina limites, acompanhe o consumo e veja onde seu dinheiro está sendo usado.</p></div><button class="primary-btn" data-open-modal="budgetModal">+ Novo orçamento</button></div>
+          <div class="budget-overview"><div class="budget-focus"><span>Orçamento da viagem atual</span><strong id="budgetMainTotal">R$ 0,00</strong><small id="budgetMainTrip">—</small><div class="progress large"><i id="budgetMainBar"></i></div><div class="budget-foot"><span>Gasto <b id="budgetMainSpent">R$ 0,00</b></span><span>Saldo <b id="budgetMainRemaining">R$ 0,00</b></span></div></div><div class="budget-advice"><b>💡 Planejamento inteligente</b><p id="budgetAdvice">Cadastre um orçamento para receber uma recomendação.</p><button class="text-btn" id="recalculateBudget">Recalcular análise</button></div></div>
+          <div class="table-panel"><table><thead><tr><th>Viagem</th><th>Total</th><th>Diário</th><th>Gasto</th><th>Utilizado</th><th>Saldo</th><th>Ações</th></tr></thead><tbody id="budgetsTable"></tbody></table></div>
+        </section>
+
+        <section class="app-section" id="section-expenses">
+          <div class="section-head"><div><h2>Despesas</h2><p>Registre, filtre e analise cada gasto feito durante as viagens.</p></div><button class="primary-btn" data-open-modal="expenseModal">+ Nova despesa</button></div>
+          <div class="mini-stats four"><div><small>Total de lançamentos</small><b id="expenseCount">0</b></div><div><small>Valor total</small><b id="expenseTotal">R$ 0,00</b></div><div><small>Maior categoria</small><b id="expenseTopCategory">—</b></div><div><small>Maior despesa</small><b id="expenseLargest">R$ 0,00</b></div></div>
+          <div class="toolbar"><div class="search-box">⌕<input id="expenseSearch" placeholder="Buscar descrição..."></div><select id="expenseCategoryFilter"><option value="all">Todas as categorias</option><option>Hospedagem</option><option>Alimentação</option><option>Transporte</option><option>Passeios</option><option>Compras</option><option>Outros</option></select><select id="expenseTripFilter"><option value="all">Todas as viagens</option></select></div>
+          <div class="table-panel"><table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Viagem</th><th>Valor</th><th>Ações</th></tr></thead><tbody id="expensesFullTable"></tbody></table></div>
+        </section>
+
+        <section class="app-section" id="section-itinerary">
+          <div class="section-head"><div><h2>Roteiro</h2><p>Monte sua programação por dia e controle o custo previsto das experiências.</p></div><button class="primary-btn" data-open-modal="itineraryModal">+ Nova atividade</button></div>
+          <div class="itinerary-tools"><div class="route-summary"><span>Atividades planejadas</span><b id="itineraryCount">0</b></div><div class="route-summary"><span>Custo previsto</span><b id="itineraryCost">R$ 0,00</b></div><div class="route-summary"><span>Próxima atividade</span><b id="itineraryNext">—</b></div><select id="itineraryTripFilter"><option value="all">Todas as viagens</option></select></div>
+          <div class="timeline" id="itineraryTimeline"></div>
+        </section>
+
+        <section class="app-section" id="section-goals">
+          <div class="section-head"><div><h2>Metas de Economia</h2><p>Crie objetivos, acompanhe o progresso e registre novas contribuições.</p></div><button class="primary-btn" data-open-modal="goalModal">+ Nova meta</button></div>
+          <div class="goal-highlight"><div><span>Progresso total das metas</span><strong id="goalOverallPct">0%</strong></div><div class="progress large"><i id="goalOverallBar"></i></div><small id="goalOverallText">R$ 0,00 de R$ 0,00</small></div>
+          <div class="section-grid cards-2" id="goalsFull"></div>
+        </section>
+
+        <section class="app-section" id="section-reports">
+          <div class="section-head"><div><h2>Relatórios</h2><p>Transforme os dados da viagem em uma visão financeira fácil de apresentar.</p></div><div class="button-group"><button class="outline-btn static-btn" id="printReport">Imprimir</button><button class="primary-btn" id="downloadReport">Baixar CSV</button></div></div>
+          <div class="report-tabs"><button class="report-tab active" data-report-tab="summary">Resumo</button><button class="report-tab" data-report-tab="categories">Categorias</button><button class="report-tab" data-report-tab="trips">Por viagem</button></div>
+          <div class="report-grid"><div class="report-card"><span>Orçamento</span><b id="reportBudget">R$ 0,00</b><small>planejado</small></div><div class="report-card"><span>Total gasto</span><b id="reportSpent">R$ 0,00</b><small>despesas registradas</small></div><div class="report-card"><span>Saldo</span><b id="reportRemaining">R$ 0,00</b><small>disponível</small></div><div class="report-card"><span>Utilização</span><b id="reportUsage">0%</b><small>do orçamento</small></div></div>
+          <div class="report-tab-content active" id="report-summary"><div class="table-panel"><h3>Indicadores da viagem atual</h3><div class="report-detail-grid"><div><span>Média diária</span><b id="reportDaily">R$ 0,00</b></div><div><span>Dias de viagem</span><b id="reportDays">0</b></div><div><span>Maior gasto</span><b id="reportLargest">R$ 0,00</b></div><div><span>Score financeiro</span><b id="reportScore">0 / 100</b></div></div></div></div>
+          <div class="report-tab-content" id="report-categories"><div class="table-panel"><h3>Resumo por categoria</h3><div id="reportCategories"></div></div></div>
+          <div class="report-tab-content" id="report-trips"><div class="table-panel"><table><thead><tr><th>Viagem</th><th>Orçamento</th><th>Gasto</th><th>Saldo</th><th>Uso</th></tr></thead><tbody id="reportTrips"></tbody></table></div></div>
+        </section>
+
+        <section class="app-section" id="section-alerts">
+          <div class="section-head"><div><h2>Alertas</h2><p>Configure avisos para orçamento, prazos, roteiro e situações que precisam da sua atenção.</p></div><button class="primary-btn" data-open-modal="alertModal">+ Novo alerta</button></div>
+          <div class="alert-summary"><div><span>Todos</span><b id="alertTotal">0</b></div><div><span>Atenção</span><b id="alertWarning">0</b></div><div><span>Urgentes</span><b id="alertDanger">0</b></div><div><span>Informativos</span><b id="alertInfo">0</b></div></div>
+          <div class="toolbar"><select id="alertFilter"><option value="all">Todos os alertas</option><option value="warning">Atenção</option><option value="danger">Urgentes</option><option value="info">Informativos</option></select><button class="text-btn" id="clearReadAlerts">Limpar avisos informativos</button></div>
+          <div id="alertsFull"></div>
+        </section>
+
+        <section class="app-section" id="section-settings">
+          <div class="section-head"><div><h2>Configurações</h2><p>Gerencie seu perfil, preferências e comportamento do TravelCash.</p></div></div>
+          <div class="settings-grid three"><div class="settings-card"><h3>👤 Perfil</h3><label>Nome<input id="settingsName" value="Giovanna Pereira"></label><label>E-mail<input id="settingsEmail" value="giovanna@travelcash.local"></label><button class="primary-btn" id="saveProfile">Salvar perfil</button></div><div class="settings-card"><h3>🔔 Notificações</h3><label class="switch-row"><span>Alertas de orçamento</span><input id="prefBudget" type="checkbox" checked></label><label class="switch-row"><span>Resumo diário</span><input id="prefDaily" type="checkbox" checked></label><label class="switch-row"><span>Notificações de roteiro</span><input id="prefRoute" type="checkbox" checked></label><button class="primary-btn" id="savePreferences">Salvar preferências</button></div><div class="settings-card"><h3>💰 Preferências financeiras</h3><label>Moeda<select id="settingsCurrency"><option value="BRL">Real brasileiro (R$)</option><option value="USD">Dólar (US$)</option><option value="EUR">Euro (€)</option></select></label><label>Limite de alerta diário<input id="settingsDailyLimit" type="number" value="250" step="10"></label><button class="primary-btn" id="saveFinance">Salvar regras</button></div></div>
+        </section>
+
+        <div class="functional-note">
+          <div><b>Backend REST ativo</b><span>Dados desta tela são carregados de <code>/api/dashboard?tripId=1</code>.</span></div>
+          <span class="api-status" id="apiStatus">● conectado</span>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ===== Modais de cadastro ===== -->
+  <div class="modal" id="tripModal">
+    <div class="modal-box">
+      <button class="modal-close" type="button">×</button>
+      <h3>Nova viagem</h3>
+      <form data-resource="trips">
+        <label>Nome da viagem<input name="name" placeholder="Ex.: Orlando - Férias 2025" required></label>
+        <label>Destino<input name="destination" placeholder="Ex.: Orlando, EUA"></label>
+        <div class="form-row">
+          <label>Início<input name="startDate" type="date" required></label>
+          <label>Término<input name="endDate" type="date" required></label>
+        </div>
+        <div class="form-row">
+          <label>Viajantes<input name="travelers" type="number" min="1" value="1"></label>
+          <label>Status
+            <select name="status">
+              <option>Planejamento</option>
+              <option>Em andamento</option>
+              <option>Concluída</option>
+            </select>
+          </label>
+        </div>
+        <button class="primary-btn" type="submit">Salvar viagem</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="budgetModal">
+    <div class="modal-box">
+      <button class="modal-close" type="button">×</button>
+      <h3>Novo orçamento</h3>
+      <form data-resource="budgets">
+        <label>ID da viagem<input name="tripId" type="number" min="1" placeholder="Ex.: 1" required></label>
+        <div class="form-row">
+          <label>Orçamento total<input name="totalBudget" type="number" step="0.01" min="0" required></label>
+          <label>Orçamento diário<input name="dailyBudget" type="number" step="0.01" min="0"></label>
+        </div>
+        <button class="primary-btn" type="submit">Salvar orçamento</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="expenseModal">
+    <div class="modal-box">
+      <button class="modal-close" type="button">×</button>
+      <h3>Nova despesa</h3>
+      <form data-resource="expenses">
+        <div class="form-row">
+          <label>ID da viagem<input name="tripId" type="number" min="1" placeholder="Ex.: 1" required></label>
+          <label>Categoria
+            <select name="category" required>
+              <option>Hospedagem</option>
+              <option>Alimentação</option>
+              <option>Transporte</option>
+              <option>Passeios</option>
+              <option>Compras</option>
+              <option>Outros</option>
+            </select>
+          </label>
+        </div>
+        <label>Descrição<input name="description" placeholder="Ex.: Jantar" required></label>
+        <div class="form-row">
+          <label>Valor<input name="amount" type="number" step="0.01" min="0" required></label>
+          <label>Data<input name="date" type="date" required></label>
+        </div>
+        <button class="primary-btn" type="submit">Salvar despesa</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="itineraryModal">
+    <div class="modal-box">
+      <button class="modal-close" type="button">×</button>
+      <h3>Nova atividade do roteiro</h3>
+      <form data-resource="itinerary">
+        <div class="form-row">
+          <label>ID da viagem<input name="tripId" type="number" min="1" placeholder="Ex.: 1" required></label>
+          <label>Data<input name="date" type="date" required></label>
+        </div>
+        <label>Título<input name="title" placeholder="Ex.: Magic Kingdom" required></label>
+        <label>Local<input name="location" placeholder="Ex.: Walt Disney World"></label>
+        <label>Custo previsto<input name="estimatedCost" type="number" step="0.01" min="0"></label>
+        <button class="primary-btn" type="submit">Salvar atividade</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="goalModal">
+    <div class="modal-box">
+      <button class="modal-close" type="button">×</button>
+      <h3>Nova meta de economia</h3>
+      <form data-resource="goals">
+        <label>Nome da meta<input name="name" placeholder="Ex.: Viagem Europa 2026" required></label>
+        <div class="form-row">
+          <label>Valor da meta<input name="targetAmount" type="number" step="0.01" min="0" required></label>
+          <label>Valor atual<input name="currentAmount" type="number" step="0.01" min="0" value="0" required></label>
+        </div>
+        <button class="primary-btn" type="submit">Salvar meta</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="alertModal">
+    <div class="modal-box">
+      <button class="modal-close" type="button">×</button>
+      <h3>Novo alerta</h3>
+      <form data-resource="alerts">
+        <div class="form-row">
+          <label>ID da viagem<input name="tripId" type="number" min="1" placeholder="Ex.: 1" required></label>
+          <label>Tipo
+            <select name="type" required>
+              <option value="info">Informativo</option>
+              <option value="warning">Atenção</option>
+              <option value="danger">Urgente</option>
+            </select>
+          </label>
+        </div>
+        <label>Título<input name="title" placeholder="Ex.: Orçamento em 80%" required></label>
+        <label>Mensagem<input name="message" placeholder="Ex.: Reveja os gastos de alimentação" required></label>
+        <button class="primary-btn" type="submit">Salvar alerta</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
