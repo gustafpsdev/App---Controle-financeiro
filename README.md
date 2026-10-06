@@ -1,6 +1,13 @@
 # TravelCash — Controle Financeiro para Viagens ✈️💰
 
 > Projeto acadêmico FIAP • **Checkpoint 2** — Aplicação, Dashboard, Otimização e Inteligência Artificial
+> Grupo tropa de elte
+> Gustavo paiva silva - RM
+> Maria Eduarda - RM
+> Arthur  - RM 
+> Giovanna pereira - RM
+> Felipe pereira - RM
+
 
 Aplicação full-stack para planejar e acompanhar os gastos de uma viagem: orçamento, despesas por
 categoria, roteiro, metas de economia e alertas — com **dashboard em tempo real** e **IA (LLM)**
@@ -10,7 +17,7 @@ que classifica despesas automaticamente e gera uma análise financeira da viagem
 |---|---|
 | **Swagger** | `http://localhost:3000/api/docs` |
 | **Aplicação** | `http://localhost:3000` |
-| **Trello / Notion** | _adicione o link do quadro do grupo aqui_ |
+
 
 ---
 
