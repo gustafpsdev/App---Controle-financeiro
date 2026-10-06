@@ -54,15 +54,6 @@ já foi consumido, a média diária e a projeção de custo final, **dispara ale
 orçamento, média diária acima do limite, projeção de estouro, concentração em uma categoria) e usa
 uma **LLM** para categorizar despesas e recomendar ações.
 
-## Integrantes
-
-| Nome | RM | Responsabilidade principal |
-|---|---|---|
-| Arthur Costa Donaire | 571283 | _a preencher_ |
-| Felipe Pereira de Jesus | 573263 | _a preencher_ |
-| Giovanna Pereira de Oliveira | 570989 | _a preencher_ |
-| Gustavo Paiva Silva | 572249 | Documentação (README/Swagger) |
-| Maria Eduarda Soares Lopes e Souza | 572612 | _a preencher_ |
 
 ## Tecnologias
 
