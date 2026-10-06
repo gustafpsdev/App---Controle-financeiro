@@ -8,10 +8,10 @@
 | Nome | RM |
 |---|---|
 | Arthur Costa Donaire | 571283 |
-| Felipe Pereira | 573262 |
-| Giovanna Pereira | 570989 |
-| Gustavo Paiva | 572249 |
-| Maria Eduarda Soares | 572612 |
+| Felipe Pereira de Jesus | 573263 |
+| Giovanna Pereira de Oliveira | 570989 |
+| Gustavo Paiva Silva | 572249 |
+| Maria Eduarda Soares Lopes e Souza | 572612 |
 
 Aplicação full-stack para planejar e acompanhar os gastos de uma viagem: orçamento, despesas por
 categoria, roteiro, metas de economia e alertas — com **dashboard em tempo real** e **IA (LLM)**
@@ -59,10 +59,10 @@ uma **LLM** para categorizar despesas e recomendar ações.
 | Nome | RM | Responsabilidade principal |
 |---|---|---|
 | Arthur Costa Donaire | 571283 | _a preencher_ |
-| Felipe Pereira | 573262 | _a preencher_ |
-| Giovanna Pereira | 570989 | _a preencher_ |
-| Gustavo Paiva | 572249 | Documentação (README/Swagger) |
-| Maria Eduarda Soares | 572612 | _a preencher_ |
+| Felipe Pereira de Jesus | 573263 | _a preencher_ |
+| Giovanna Pereira de Oliveira | 570989 | _a preencher_ |
+| Gustavo Paiva Silva | 572249 | Documentação (README/Swagger) |
+| Maria Eduarda Soares Lopes e Souza | 572612 | _a preencher_ |
 
 ## Tecnologias
 
@@ -72,7 +72,7 @@ uma **LLM** para categorizar despesas e recomendar ações.
 | Banco | SQLite (`better-sqlite3`) — relacional, sem servidor externo |
 | Segurança | `helmet` (cabeçalhos HTTP/CSP) • `express-rate-limit` • validação própria • escape de HTML no frontend |
 | Documentação | OpenAPI 3 + `swagger-ui-express` (gerado a partir do código) |
-| IA | Google Gemini (`gemini-2.5-flash`) **ou** Anthropic Claude (`claude-haiku-4-5`) via REST — com fallback por regras |
+| IA | Google Gemini (`gemini-3.5-flash-lite`) **ou** Anthropic Claude (`claude-haiku-4-5`) via REST — com fallback por regras |
 | Frontend | HTML + CSS + JavaScript puro (SPA, sem framework), gráficos em SVG |
 | Testes | `node:test` (nativo) + `supertest` |
 
@@ -163,8 +163,7 @@ flowchart LR
 ├── public/                   # frontend
 ├── docs/
 │   ├── openapi.yaml          # Swagger (gerado)
-│   ├── MODELAGEM.md          # decisões de normalização + diagrama ER
-│   └── APRESENTACAO-CP2.md   # roteiro da apresentação e cartões do Trello
+│   └── MODELAGEM.md          # decisões de normalização + diagrama ER
 ├── scripts/generate-openapi.js
 ├── tests/                    # testes unitários e de integração
 └── data/seed.json            # dados de exemplo (migrados do db.json do CP1)
@@ -276,7 +275,7 @@ GET /api/expenses?tripId=1&category=Alimentação&dateFrom=2025-06-01&sort=-amou
 
 | Item | Detalhe |
 |---|---|
-| **Modelo/serviço** | Google **Gemini 2.5 Flash** (padrão — camada gratuita) ou **Claude Haiku 4.5**, chamados via API REST (`src/services/llm.js`), sem SDK. |
+| **Modelo/serviço** | Google **Gemini 3.5 Flash-Lite** (`gemini-3.5-flash-lite`, padrão — camada gratuita), usado no desenvolvimento e na apresentação. O código também aceita **Claude Haiku 4.5** como alternativa. Ambos são chamados via API REST (`src/services/llm.js`), sem SDK; o modelo pode ser trocado em `LLM_MODEL`. |
 | **Finalidade 1 — Classificação** | Classifica despesas pela descrição em uma das categorias cadastradas. Usada no botão **✨ Sugerir**, na opção **Automática (IA)** e em todo `POST /api/expenses` sem categoria. |
 | **Finalidade 2 — Análise financeira** | Gera resumo, nível de saúde (boa/atenção/crítica), pontos de atenção, recomendações e previsão para a viagem. |
 | **Dados enviados** | Classificação: descrição (≤ 200 caracteres) e valor. Análise: **apenas números agregados** — destino, duração, nº de viajantes, orçamento, gasto, média, projeção, totais por categoria, 5 maiores despesas e títulos dos alertas. **Nunca** nome, e-mail ou IDs do usuário. O painel da IA mostra exatamente o JSON enviado. |
@@ -301,5 +300,17 @@ npm test
 - **Ritmo de gasto:** compra antecipada fora da média diária, projeção antes/durante/depois da viagem,
   alertas que continuam disparando quando o gasto alto é durante a viagem.
 - **IA:** fallback sem chave, classificação via LLM simulada, categoria inventada descartada, falha do provedor, classificação automática no `POST`, proteção contra *prompt injection*, ausência de dados pessoais e cache.
+
+## Evolução CP1 → CP2
+
+| Requisito do CP2 | Onde está |
+|---|---|
+| Evolução do backend | `src/` (camadas, validação, regras, segurança, respostas padronizadas) |
+| Frontend integrado à API | `public/` (CRUD com edição, feedback de erro/sucesso, paginação) |
+| Dashboard com dados reais | Aba Dashboard + `GET /api/dashboard` |
+| Otimização da API | [seção acima](#otimizações-da-api-cp2) |
+| Banco revisado e normalizado | `src/db/schema.sql` + [docs/MODELAGEM.md](docs/MODELAGEM.md) |
+| Documentação e Swagger | Este README + `/api/docs` |
+| Testes | `tests/` → `npm test` |
 | LLM | `src/services/ai.js` e `llm.js` + painel no dashboard |
-| Organização ágil | Quadro do grupo (_incluir aqui o link do Trello/Notion_) — sugestão de cartões em [docs/APRESENTACAO-CP2.md](docs/APRESENTACAO-CP2.md) |
+| Organização ágil | Quadro do grupo no Trello: https://trello.com/b/62ynIlE7/travelcash-tropa-de-elite |
