@@ -54,6 +54,16 @@ já foi consumido, a média diária e a projeção de custo final, **dispara ale
 orçamento, média diária acima do limite, projeção de estouro, concentração em uma categoria) e usa
 uma **LLM** para categorizar despesas e recomendar ações.
 
+## Integrantes
+
+| Nome | RM | Responsabilidade principal |
+|---|---|---|
+| Arthur Costa Donaire | 571283 | _a preencher_ |
+| Felipe Pereira | 573262 | _a preencher_ |
+| Giovanna Pereira | 570989 | _a preencher_ |
+| Gustavo Paiva | 572249 | Documentação (README/Swagger) |
+| Maria Eduarda Soares | 572612 | _a preencher_ |
+
 ## Tecnologias
 
 | Camada | Tecnologia |
@@ -80,13 +90,15 @@ npm start
 
 Abra `http://localhost:3000` (aplicação) e `http://localhost:3000/api/docs` (Swagger).
 
-Na primeira execução o banco `data/travelcash.db` é criado e populado com dados de exemplo.
+Na primeira execução o banco `data/travelcash.db` é criado e populado com dados de exemplo: três viagens
+(Orlando 2025, Europa 2026 e Cusco 2026), todas com orçamento, despesas e roteiro. Se você já tinha um
+banco criado por uma versão anterior, rode `npm run db:reset` uma vez para receber os dados novos.
 
 | Script | O que faz |
 |---|---|
 | `npm start` | Sobe o servidor |
 | `npm run dev` | Sobe com reload automático |
-| `npm test` | Executa os 44 testes automatizados |
+| `npm test` | Executa os 53 testes automatizados |
 | `npm run test:coverage` | Testes + relatório de cobertura |
 | `npm run docs:generate` | Regenera `docs/openapi.yaml` a partir das validações |
 | `npm run db:reset` | Apaga o banco (recriado com os dados de exemplo no próximo start) |
@@ -170,7 +182,11 @@ sempre coerentes.
   orçamento diário restante, maior categoria, score financeiro, gráfico de categorias, gráfico de
   **evolução (acumulado ou por dia) com linha do orçamento**, alertas automáticos e manuais, roteiro,
   metas e últimas despesas — **tudo vindo da API**.
-- **Análise inteligente (IA)** no dashboard, exibindo os dados enviados ao modelo.
+- **Gastos antes da viagem separados dos gastos durante a viagem**: passagens e reservas compradas antes do
+  início consomem o orçamento, mas não entram na média diária nem aceleram a projeção. O gráfico de evolução
+  segue o calendário da viagem e mostra as compras antecipadas numa faixa "Pré-viagem".
+- **Análise inteligente (IA)** no dashboard, exibindo os dados enviados ao modelo; a mesma análise atende os
+  botões **Recalcular análise** (Orçamentos) e **Ver dicas da IA** (menu lateral).
 - **Despesas** com busca, filtros, ordenação e **paginação no servidor**, criação, **edição** e exclusão;
   botão **✨ Sugerir categoria** e opção **Automática (IA)** no cadastro.
 - Viagens, Orçamentos, Roteiro, Metas (com contribuição), Relatórios (CSV/impressão), Alertas e Configurações.
@@ -181,7 +197,8 @@ sempre coerentes.
 - CRUD completo para 10 recursos com `GET/POST/PUT/PATCH/DELETE`.
 - Validação de tipos, formatos (data, e-mail, cor), limites, enums e chaves estrangeiras.
 - Regras de negócio: término ≥ início da viagem; 1 orçamento por viagem; valores positivos;
-  categoria em uso não pode ser apagada; classificação automática de despesas; alertas automáticos.
+  categoria em uso não pode ser apagada; classificação automática de despesas; alertas automáticos;
+  fase da viagem (antes/durante/depois) calculada pelas datas; média diária e projeção só com dias de viagem.
 - Respostas padronizadas e códigos HTTP corretos (`200, 201, 400, 404, 409, 413, 422, 429, 500`).
 
 ## Banco de dados
@@ -226,7 +243,7 @@ Filtros extras: despesas → `category`, `categoryId`, `dateFrom`, `dateTo`, `mi
 viagens → `status`; alertas → `type`; roteiro → `dateFrom`, `dateTo`.
 
 ```http
-GET /api/expenses?tripId=1&category=Alimentação&dateFrom=2025-05-20&sort=-amount&page=1&limit=10
+GET /api/expenses?tripId=1&category=Alimentação&dateFrom=2025-06-01&sort=-amount&page=1&limit=10
 ```
 
 ### Dashboard e IA
@@ -253,6 +270,7 @@ GET /api/expenses?tripId=1&category=Alimentação&dateFrom=2025-05-20&sort=-amou
 | 7 | Análise da IA seria recalculada a cada clique | Cache por *hash* dos dados (10 min) | Menos custo e latência com a LLM |
 | 8 | Validação só de "campo vazio" | Tipos, formatos, limites, FKs e regras | Erros claros (`details` por campo) |
 | 9 | Erros sem padrão para JSON inválido, FK, duplicidade | Middleware central com `400/404/409/413/422/429` | Frontend mostra a mensagem exata |
+| 10 | Média diária e projeção misturavam compras antecipadas com gastos da viagem (passagem comprada antes inflava a projeção) | Gasto separado em pré-viagem / durante / pós-viagem, calculado na API | Indicadores e alertas coerentes com as datas |
 
 ## Integração com LLM
 
@@ -274,24 +292,14 @@ GET /api/expenses?tripId=1&category=Alimentação&dateFrom=2025-05-20&sort=-amou
 npm test
 ```
 
-44 testes (unitários + integração) rodando em banco **em memória** e com a LLM **simulada**
+53 testes (unitários + integração) rodando em banco **em memória** e com a LLM **simulada**
 (nenhuma chamada externa durante os testes):
 
 - **Validação (unitário):** datas, obrigatórios, conversão de tipos, enums, e-mail, validação parcial, regra de datas.
 - **API (integração):** paginação/filtros/ordenação/busca, CRUD, 400/404/409/422, cascata, FK restrita, JSON inválido, cabeçalhos de segurança, Swagger.
 - **Dashboard:** totais conferidos contra a soma das despesas, evolução diária, alertas automáticos.
+- **Ritmo de gasto:** compra antecipada fora da média diária, projeção antes/durante/depois da viagem,
+  alertas que continuam disparando quando o gasto alto é durante a viagem.
 - **IA:** fallback sem chave, classificação via LLM simulada, categoria inventada descartada, falha do provedor, classificação automática no `POST`, proteção contra *prompt injection*, ausência de dados pessoais e cache.
-
-## Evolução CP1 → CP2
-
-| Requisito do CP2 | Onde está |
-|---|---|
-| Evolução do backend | `src/` (camadas, validação, regras, segurança, respostas padronizadas) |
-| Frontend integrado à API | `public/` (CRUD com edição, feedback de erro/sucesso, paginação) |
-| Dashboard com dados reais | Aba Dashboard + `GET /api/dashboard` |
-| Otimização da API | [seção acima](#otimizações-da-api-cp2) |
-| Banco revisado e normalizado | `src/db/schema.sql` + [docs/MODELAGEM.md](docs/MODELAGEM.md) |
-| Documentação e Swagger | Este README + `/api/docs` |
-| Testes | `tests/` → `npm test` |
 | LLM | `src/services/ai.js` e `llm.js` + painel no dashboard |
-| Organização ágil | Quadro do grupo (link no topo) — sugestão de cartões em [docs/APRESENTACAO-CP2.md](docs/APRESENTACAO-CP2.md) |
+| Organização ágil | Quadro do grupo (_incluir aqui o link do Trello/Notion_) — sugestão de cartões em [docs/APRESENTACAO-CP2.md](docs/APRESENTACAO-CP2.md) |
