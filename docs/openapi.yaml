@@ -1,0 +1,3278 @@
+# Arquivo gerado por scripts/generate-openapi.js — não edite à mão.
+openapi: 3.0.3
+info:
+  title: TravelCash API
+  version: 2.0.0
+  description: >-
+    API REST do **TravelCash — Controle Financeiro para Viagens** (FIAP • CP2).
+
+
+    **Padrão de resposta**: `{ success, data, meta? }` em sucesso e `{
+    success:false, error:{ code, message, details? } }` em erro.
+
+
+    **Listagens** aceitam `page`, `limit` (máx. 100, padrão 20), `sort` (prefixo
+    `-` = decrescente) e `search`; filtros específicos de cada recurso estão
+    descritos nos parâmetros.
+
+
+    **IA (LLM)**: endpoints em *IA* usam Gemini ou Claude quando há chave
+    configurada; caso contrário respondem com regras locais (`source:
+    "regras"`).
+  license:
+    name: Uso acadêmico — FIAP
+servers:
+  - url: /
+    description: Servidor atual
+tags:
+  - name: Sistema
+  - name: Dashboard
+  - name: IA
+    description: Funcionalidades baseadas em LLM
+  - name: Usuários
+  - name: Viagens
+  - name: Orçamentos
+  - name: Categorias
+  - name: Despesas
+  - name: Roteiro
+  - name: Transportes
+  - name: Seguros
+  - name: Metas
+  - name: Alertas
+paths:
+  /api/users:
+    get:
+      tags:
+        - Usuários
+      summary: Listar usuários (paginado)
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/limit"
+        - name: sort
+          in: query
+          description: 'Campos: name, createdAt, id. Prefixo "-" = decrescente.'
+          schema:
+            type: string
+            default: name
+        - $ref: "#/components/parameters/search"
+      responses:
+        "200":
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Users"
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      operationId: getUsers
+      security: []
+    post:
+      tags:
+        - Usuários
+      summary: Criar usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UsersInput"
+      responses:
+        "201":
+          description: Criado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Users"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: postUsers
+      security: []
+  /api/users/{id}:
+    get:
+      tags:
+        - Usuários
+      summary: Buscar usuário por id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Users"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      operationId: getUsersById
+      security: []
+    put:
+      tags:
+        - Usuários
+      summary: Atualizar usuário
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UsersInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Users"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: putUsersById
+      security: []
+    patch:
+      tags:
+        - Usuários
+      summary: Atualizar parcialmente usuário
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UsersInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Users"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: patchUsersById
+      security: []
+    delete:
+      tags:
+        - Usuários
+      summary: Excluir usuário
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      deleted:
+                        type: boolean
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+      operationId: deleteUsersById
+      security: []
+  /api/trips:
+    get:
+      tags:
+        - Viagens
+      summary: Listar viagens (paginado)
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/limit"
+        - name: sort
+          in: query
+          description: 'Campos: name, startDate, endDate, createdAt, id. Prefixo "-" =
+            decrescente.'
+          schema:
+            type: string
+            default: startDate
+        - $ref: "#/components/parameters/search"
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - Planejamento
+              - Em andamento
+              - Concluída
+        - name: userId
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            description: ID de usuário (FK)
+      responses:
+        "200":
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Trips"
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      operationId: getTrips
+      security: []
+    post:
+      tags:
+        - Viagens
+      summary: Criar viagem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TripsInput"
+      responses:
+        "201":
+          description: Criado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Trips"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: postTrips
+      security: []
+  /api/trips/{id}:
+    get:
+      tags:
+        - Viagens
+      summary: Buscar viagem por id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Trips"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      operationId: getTripsById
+      security: []
+    put:
+      tags:
+        - Viagens
+      summary: Atualizar viagem
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TripsInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Trips"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: putTripsById
+      security: []
+    patch:
+      tags:
+        - Viagens
+      summary: Atualizar parcialmente viagem
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TripsInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Trips"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: patchTripsById
+      security: []
+    delete:
+      tags:
+        - Viagens
+      summary: Excluir viagem
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      deleted:
+                        type: boolean
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+      operationId: deleteTripsById
+      security: []
+  /api/budgets:
+    get:
+      tags:
+        - Orçamentos
+      summary: Listar orçamentos (paginado)
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/limit"
+        - name: sort
+          in: query
+          description: 'Campos: totalBudget, createdAt, tripId, id. Prefixo "-" =
+            decrescente.'
+          schema:
+            type: string
+            default: tripId
+        - $ref: "#/components/parameters/tripId"
+      responses:
+        "200":
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Budgets"
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      operationId: getBudgets
+      security: []
+    post:
+      tags:
+        - Orçamentos
+      summary: Criar orçamento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetsInput"
+      responses:
+        "201":
+          description: Criado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Budgets"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: postBudgets
+      security: []
+  /api/budgets/{id}:
+    get:
+      tags:
+        - Orçamentos
+      summary: Buscar orçamento por id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Budgets"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      operationId: getBudgetsById
+      security: []
+    put:
+      tags:
+        - Orçamentos
+      summary: Atualizar orçamento
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetsInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Budgets"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: putBudgetsById
+      security: []
+    patch:
+      tags:
+        - Orçamentos
+      summary: Atualizar parcialmente orçamento
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetsInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Budgets"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: patchBudgetsById
+      security: []
+    delete:
+      tags:
+        - Orçamentos
+      summary: Excluir orçamento
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      deleted:
+                        type: boolean
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+      operationId: deleteBudgetsById
+      security: []
+  /api/categories:
+    get:
+      tags:
+        - Categorias
+      summary: Listar categorias (paginado)
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/limit"
+        - name: sort
+          in: query
+          description: 'Campos: name, id. Prefixo "-" = decrescente.'
+          schema:
+            type: string
+            default: name
+        - $ref: "#/components/parameters/search"
+      responses:
+        "200":
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Categories"
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      operationId: getCategories
+      security: []
+    post:
+      tags:
+        - Categorias
+      summary: Criar categoria
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoriesInput"
+      responses:
+        "201":
+          description: Criado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Categories"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: postCategories
+      security: []
+  /api/categories/{id}:
+    get:
+      tags:
+        - Categorias
+      summary: Buscar categoria por id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Categories"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      operationId: getCategoriesById
+      security: []
+    put:
+      tags:
+        - Categorias
+      summary: Atualizar categoria
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoriesInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Categories"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: putCategoriesById
+      security: []
+    patch:
+      tags:
+        - Categorias
+      summary: Atualizar parcialmente categoria
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoriesInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Categories"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: patchCategoriesById
+      security: []
+    delete:
+      tags:
+        - Categorias
+      summary: Excluir categoria
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      deleted:
+                        type: boolean
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+      operationId: deleteCategoriesById
+      security: []
+  /api/expenses:
+    get:
+      tags:
+        - Despesas
+      summary: Listar despesas (paginado)
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/limit"
+        - name: sort
+          in: query
+          description: 'Campos: date, amount, description, createdAt, id. Prefixo "-" =
+            decrescente.'
+          schema:
+            type: string
+            default: -date
+        - $ref: "#/components/parameters/search"
+        - $ref: "#/components/parameters/tripId"
+        - name: category
+          in: query
+          schema:
+            type: string
+            description: Nome da categoria (GET /api/categories). Em POST, omitir ou enviar
+              "auto" faz a IA classificar.
+        - name: categoryId
+          in: query
+          schema:
+            type: integer
+        - name: dateFrom
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: dateTo
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: minAmount
+          in: query
+          schema:
+            type: number
+        - name: maxAmount
+          in: query
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Expenses"
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      operationId: getExpenses
+      security: []
+    post:
+      tags:
+        - Despesas
+      summary: Criar despesa
+      description: Se `category` for omitida ou `"auto"`, a IA classifica a despesa e
+        `meta.categorizedBy` indica a origem (llm ou regras).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpensesInput"
+      responses:
+        "201":
+          description: Criado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Expenses"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: postExpenses
+      security: []
+  /api/expenses/{id}:
+    get:
+      tags:
+        - Despesas
+      summary: Buscar despesa por id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Expenses"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      operationId: getExpensesById
+      security: []
+    put:
+      tags:
+        - Despesas
+      summary: Atualizar despesa
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpensesInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Expenses"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: putExpensesById
+      security: []
+    patch:
+      tags:
+        - Despesas
+      summary: Atualizar parcialmente despesa
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExpensesInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Expenses"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: patchExpensesById
+      security: []
+    delete:
+      tags:
+        - Despesas
+      summary: Excluir despesa
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      deleted:
+                        type: boolean
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+      operationId: deleteExpensesById
+      security: []
+  /api/itinerary:
+    get:
+      tags:
+        - Roteiro
+      summary: Listar roteiro (paginado)
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/limit"
+        - name: sort
+          in: query
+          description: 'Campos: date, estimatedCost, title, id. Prefixo "-" = decrescente.'
+          schema:
+            type: string
+            default: date
+        - $ref: "#/components/parameters/search"
+        - $ref: "#/components/parameters/tripId"
+        - name: dateFrom
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: dateTo
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Itinerary"
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      operationId: getItinerary
+      security: []
+    post:
+      tags:
+        - Roteiro
+      summary: Criar atividade do roteiro
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItineraryInput"
+      responses:
+        "201":
+          description: Criado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Itinerary"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: postItinerary
+      security: []
+  /api/itinerary/{id}:
+    get:
+      tags:
+        - Roteiro
+      summary: Buscar atividade do roteiro por id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Itinerary"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      operationId: getItineraryById
+      security: []
+    put:
+      tags:
+        - Roteiro
+      summary: Atualizar atividade do roteiro
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItineraryInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Itinerary"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: putItineraryById
+      security: []
+    patch:
+      tags:
+        - Roteiro
+      summary: Atualizar parcialmente atividade do roteiro
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItineraryInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Itinerary"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: patchItineraryById
+      security: []
+    delete:
+      tags:
+        - Roteiro
+      summary: Excluir atividade do roteiro
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      deleted:
+                        type: boolean
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+      operationId: deleteItineraryById
+      security: []
+  /api/transports:
+    get:
+      tags:
+        - Transportes
+      summary: Listar transportes (paginado)
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/limit"
+        - name: sort
+          in: query
+          description: 'Campos: amount, type, id. Prefixo "-" = decrescente.'
+          schema:
+            type: string
+            default: type
+        - $ref: "#/components/parameters/search"
+        - $ref: "#/components/parameters/tripId"
+      responses:
+        "200":
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Transports"
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      operationId: getTransports
+      security: []
+    post:
+      tags:
+        - Transportes
+      summary: Criar transporte
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransportsInput"
+      responses:
+        "201":
+          description: Criado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Transports"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: postTransports
+      security: []
+  /api/transports/{id}:
+    get:
+      tags:
+        - Transportes
+      summary: Buscar transporte por id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Transports"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      operationId: getTransportsById
+      security: []
+    put:
+      tags:
+        - Transportes
+      summary: Atualizar transporte
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransportsInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Transports"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: putTransportsById
+      security: []
+    patch:
+      tags:
+        - Transportes
+      summary: Atualizar parcialmente transporte
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransportsInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Transports"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: patchTransportsById
+      security: []
+    delete:
+      tags:
+        - Transportes
+      summary: Excluir transporte
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      deleted:
+                        type: boolean
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+      operationId: deleteTransportsById
+      security: []
+  /api/insurances:
+    get:
+      tags:
+        - Seguros
+      summary: Listar seguros (paginado)
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/limit"
+        - name: sort
+          in: query
+          description: 'Campos: amount, provider, id. Prefixo "-" = decrescente.'
+          schema:
+            type: string
+            default: provider
+        - $ref: "#/components/parameters/search"
+        - $ref: "#/components/parameters/tripId"
+      responses:
+        "200":
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Insurances"
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      operationId: getInsurances
+      security: []
+    post:
+      tags:
+        - Seguros
+      summary: Criar seguro
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsurancesInput"
+      responses:
+        "201":
+          description: Criado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Insurances"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: postInsurances
+      security: []
+  /api/insurances/{id}:
+    get:
+      tags:
+        - Seguros
+      summary: Buscar seguro por id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Insurances"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      operationId: getInsurancesById
+      security: []
+    put:
+      tags:
+        - Seguros
+      summary: Atualizar seguro
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsurancesInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Insurances"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: putInsurancesById
+      security: []
+    patch:
+      tags:
+        - Seguros
+      summary: Atualizar parcialmente seguro
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsurancesInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Insurances"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: patchInsurancesById
+      security: []
+    delete:
+      tags:
+        - Seguros
+      summary: Excluir seguro
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      deleted:
+                        type: boolean
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+      operationId: deleteInsurancesById
+      security: []
+  /api/goals:
+    get:
+      tags:
+        - Metas
+      summary: Listar metas (paginado)
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/limit"
+        - name: sort
+          in: query
+          description: 'Campos: name, targetAmount, currentAmount, id. Prefixo "-" =
+            decrescente.'
+          schema:
+            type: string
+            default: name
+        - $ref: "#/components/parameters/search"
+      responses:
+        "200":
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Goals"
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      operationId: getGoals
+      security: []
+    post:
+      tags:
+        - Metas
+      summary: Criar meta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoalsInput"
+      responses:
+        "201":
+          description: Criado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Goals"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: postGoals
+      security: []
+  /api/goals/{id}:
+    get:
+      tags:
+        - Metas
+      summary: Buscar meta por id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Goals"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      operationId: getGoalsById
+      security: []
+    put:
+      tags:
+        - Metas
+      summary: Atualizar meta
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoalsInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Goals"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: putGoalsById
+      security: []
+    patch:
+      tags:
+        - Metas
+      summary: Atualizar parcialmente meta
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoalsInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Goals"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: patchGoalsById
+      security: []
+    delete:
+      tags:
+        - Metas
+      summary: Excluir meta
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      deleted:
+                        type: boolean
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+      operationId: deleteGoalsById
+      security: []
+  /api/alerts:
+    get:
+      tags:
+        - Alertas
+      summary: Listar alertas (paginado)
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/limit"
+        - name: sort
+          in: query
+          description: 'Campos: createdAt, type, id. Prefixo "-" = decrescente.'
+          schema:
+            type: string
+            default: -createdAt
+        - $ref: "#/components/parameters/search"
+        - $ref: "#/components/parameters/tripId"
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum:
+              - info
+              - warning
+              - danger
+      responses:
+        "200":
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Alerts"
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      operationId: getAlerts
+      security: []
+    post:
+      tags:
+        - Alertas
+      summary: Criar alerta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AlertsInput"
+      responses:
+        "201":
+          description: Criado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Alerts"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: postAlerts
+      security: []
+  /api/alerts/{id}:
+    get:
+      tags:
+        - Alertas
+      summary: Buscar alerta por id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Alerts"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      operationId: getAlertsById
+      security: []
+    put:
+      tags:
+        - Alertas
+      summary: Atualizar alerta
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AlertsInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Alerts"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: putAlertsById
+      security: []
+    patch:
+      tags:
+        - Alertas
+      summary: Atualizar parcialmente alerta
+      description: Somente os campos enviados são alterados.
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AlertsInput"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Alerts"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+      operationId: patchAlertsById
+      security: []
+    delete:
+      tags:
+        - Alertas
+      summary: Excluir alerta
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      deleted:
+                        type: boolean
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+      operationId: deleteAlertsById
+      security: []
+  /api/health:
+    get:
+      tags:
+        - Sistema
+      summary: Status da API e do banco
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+      operationId: getHealth
+      security: []
+  /api/dashboard:
+    get:
+      tags:
+        - Dashboard
+      summary: Dashboard consolidado de uma viagem
+      description: Indicadores, gastos por categoria, evolução diária, projeção e
+        alertas automáticos — agregados em SQL.
+      parameters:
+        - name: tripId
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      trip:
+                        $ref: "#/components/schemas/Trips"
+                      budget:
+                        $ref: "#/components/schemas/Budgets"
+                      summary:
+                        type: object
+                        properties:
+                          totalBudget:
+                            type: number
+                          totalSpent:
+                            type: number
+                          remaining:
+                            type: number
+                          utilization:
+                            type: number
+                          dailyAverage:
+                            type: number
+                          days:
+                            type: number
+                          expenseCount:
+                            type: number
+                          largestExpense:
+                            type: number
+                          projectedTotal:
+                            type: number
+                      categories:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            category:
+                              type: string
+                            color:
+                              type: string
+                            total:
+                              type: number
+                            share:
+                              type: number
+                            count:
+                              type: integer
+                      categoryTotals:
+                        type: object
+                        additionalProperties:
+                          type: number
+                        description: Formato legado (CP1)
+                      dailySpending:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            date:
+                              type: string
+                              format: date
+                            total:
+                              type: number
+                            count:
+                              type: integer
+                      alerts:
+                        type: array
+                        description: Alertas automáticos (auto=true, calculados por regras) + manuais
+                        items:
+                          type: object
+                      expenses:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Expenses"
+                      itinerary:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Itinerary"
+                      goals:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Goals"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      operationId: getDashboard
+      security: []
+  /api/trips/{id}/dashboard:
+    get:
+      tags:
+        - Dashboard
+      summary: Dashboard da viagem (rota REST)
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      trip:
+                        $ref: "#/components/schemas/Trips"
+                      budget:
+                        $ref: "#/components/schemas/Budgets"
+                      summary:
+                        type: object
+                        properties:
+                          totalBudget:
+                            type: number
+                          totalSpent:
+                            type: number
+                          remaining:
+                            type: number
+                          utilization:
+                            type: number
+                          dailyAverage:
+                            type: number
+                          days:
+                            type: number
+                          expenseCount:
+                            type: number
+                          largestExpense:
+                            type: number
+                          projectedTotal:
+                            type: number
+                      categories:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            category:
+                              type: string
+                            color:
+                              type: string
+                            total:
+                              type: number
+                            share:
+                              type: number
+                            count:
+                              type: integer
+                      categoryTotals:
+                        type: object
+                        additionalProperties:
+                          type: number
+                        description: Formato legado (CP1)
+                      dailySpending:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            date:
+                              type: string
+                              format: date
+                            total:
+                              type: number
+                            count:
+                              type: integer
+                      alerts:
+                        type: array
+                        description: Alertas automáticos (auto=true, calculados por regras) + manuais
+                        items:
+                          type: object
+                      expenses:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Expenses"
+                      itinerary:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Itinerary"
+                      goals:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Goals"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      operationId: getTripsByIdDashboard
+      security: []
+  /api/overview:
+    get:
+      tags:
+        - Dashboard
+      summary: Resumo de todas as viagens em uma única consulta
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        totalBudget:
+                          type: number
+                        totalSpent:
+                          type: number
+                        remaining:
+                          type: number
+                        utilization:
+                          type: number
+      operationId: getOverview
+      security: []
+  /api/ai/status:
+    get:
+      tags:
+        - IA
+      summary: Provedor/modelo de LLM configurado
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      provider:
+                        type: string
+                      model:
+                        type: string
+                        nullable: true
+                      configured:
+                        type: boolean
+      operationId: getAiStatus
+      security: []
+  /api/ai/classify-expense:
+    post:
+      tags:
+        - IA
+      summary: Sugerir categoria de uma despesa (LLM)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - description
+              properties:
+                description:
+                  type: string
+                  maxLength: 200
+                amount:
+                  type: number
+            example:
+              description: Uber até o aeroporto
+              amount: 85
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Classification"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+      operationId: postAiClassifyExpense
+      security: []
+  /api/trips/{id}/insights:
+    get:
+      tags:
+        - IA
+      summary: Análise financeira da viagem gerada por LLM
+      description: Envia ao modelo apenas números agregados (sem nome/e-mail).
+        Respostas ficam em cache por 10 min; use `refresh=true` para forçar nova
+        geração.
+      parameters:
+        - $ref: "#/components/parameters/id"
+        - name: refresh
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Insights"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+      operationId: getTripsByIdInsights
+      security: []
+  /api/ai/insights:
+    get:
+      tags:
+        - IA
+      summary: Análise financeira (variação por query string)
+      parameters:
+        - name: tripId
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+        - name: refresh
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Insights"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      operationId: getAiInsights
+      security: []
+components:
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    search:
+      name: search
+      in: query
+      description: Busca textual (LIKE)
+      schema:
+        type: string
+    tripId:
+      name: tripId
+      in: query
+      description: Filtra pela viagem
+      schema:
+        type: integer
+        minimum: 1
+  schemas:
+    Meta:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        totalPages:
+          type: integer
+        sort:
+          type: string
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              example: VALIDATION_ERROR
+            message:
+              type: string
+              example: Dados inválidos na requisição.
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                  message:
+                    type: string
+    Insights:
+      type: object
+      properties:
+        tripId:
+          type: integer
+        source:
+          type: string
+          enum:
+            - llm
+            - regras
+        model:
+          type: string
+          nullable: true
+          example: gemini-2.5-flash
+        cached:
+          type: boolean
+        generatedAt:
+          type: string
+          format: date-time
+        fallbackReason:
+          type: string
+        dataSent:
+          type: object
+          description: Dados agregados enviados ao modelo (sem dados pessoais)
+        insights:
+          type: object
+          properties:
+            resumo:
+              type: string
+            saude:
+              type: string
+              enum:
+                - boa
+                - atencao
+                - critica
+            pontosDeAtencao:
+              type: array
+              items:
+                type: string
+            recomendacoes:
+              type: array
+              items:
+                type: string
+            previsao:
+              type: string
+    Classification:
+      type: object
+      properties:
+        category:
+          type: string
+          example: Alimentação
+        confidence:
+          type: number
+          example: 0.92
+        reason:
+          type: string
+          example: Refeição em restaurante.
+        source:
+          type: string
+          enum:
+            - llm
+            - regras
+        model:
+          type: string
+          nullable: true
+    Users:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          maxLength: 160
+        avatar:
+          type: string
+          maxLength: 4
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+      example:
+        id: 1
+        name: Giovanna Pereira
+        email: giovanna@travelcash.local
+        avatar: GP
+    UsersInput:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          maxLength: 160
+        avatar:
+          type: string
+          maxLength: 4
+      example:
+        name: Giovanna Pereira
+        email: giovanna@travelcash.local
+        avatar: GP
+    Trips:
+      type: object
+      required:
+        - name
+        - startDate
+        - endDate
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        userId:
+          type: integer
+          minimum: 1
+          description: ID de usuário (FK)
+        name:
+          type: string
+          maxLength: 120
+        destination:
+          type: string
+          maxLength: 120
+        startDate:
+          type: string
+          format: date
+          example: 2025-06-01
+        endDate:
+          type: string
+          format: date
+          example: 2025-06-01
+        travelers:
+          type: integer
+          minimum: 1
+          maximum: 50
+        status:
+          type: string
+          enum:
+            - Planejamento
+            - Em andamento
+            - Concluída
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+      example:
+        id: 1
+        name: Orlando - Férias 2025
+        destination: Orlando, EUA
+        startDate: 2025-06-01
+        endDate: 2025-06-15
+        travelers: 2
+        status: Em andamento
+    TripsInput:
+      type: object
+      required:
+        - name
+        - startDate
+        - endDate
+      properties:
+        userId:
+          type: integer
+          minimum: 1
+          description: ID de usuário (FK)
+        name:
+          type: string
+          maxLength: 120
+        destination:
+          type: string
+          maxLength: 120
+        startDate:
+          type: string
+          format: date
+          example: 2025-06-01
+        endDate:
+          type: string
+          format: date
+          example: 2025-06-01
+        travelers:
+          type: integer
+          minimum: 1
+          maximum: 50
+        status:
+          type: string
+          enum:
+            - Planejamento
+            - Em andamento
+            - Concluída
+      example:
+        name: Orlando - Férias 2025
+        destination: Orlando, EUA
+        startDate: 2025-06-01
+        endDate: 2025-06-15
+        travelers: 2
+        status: Em andamento
+    Budgets:
+      type: object
+      required:
+        - tripId
+        - totalBudget
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        tripId:
+          type: integer
+          minimum: 1
+          description: ID de viagem (FK)
+        totalBudget:
+          type: number
+          minimum: 0
+        dailyBudget:
+          type: number
+          minimum: 0
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+      example:
+        id: 1
+        tripId: 2
+        totalBudget: 15000
+        dailyBudget: 300
+    BudgetsInput:
+      type: object
+      required:
+        - tripId
+        - totalBudget
+      properties:
+        tripId:
+          type: integer
+          minimum: 1
+          description: ID de viagem (FK)
+        totalBudget:
+          type: number
+          minimum: 0
+        dailyBudget:
+          type: number
+          minimum: 0
+      example:
+        tripId: 2
+        totalBudget: 15000
+        dailyBudget: 300
+    Categories:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 40
+        color:
+          type: string
+          maxLength: 9
+      example:
+        id: 1
+        name: Saúde
+        color: "#22aa88"
+    CategoriesInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          maxLength: 40
+        color:
+          type: string
+          maxLength: 9
+      example:
+        name: Saúde
+        color: "#22aa88"
+    Expenses:
+      type: object
+      required:
+        - tripId
+        - category
+        - description
+        - amount
+        - date
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        tripId:
+          type: integer
+          minimum: 1
+          description: ID de viagem (FK)
+        category:
+          type: string
+          description: Nome da categoria (GET /api/categories). Em POST, omitir ou enviar
+            "auto" faz a IA classificar.
+        description:
+          type: string
+          maxLength: 200
+        amount:
+          type: number
+          minimum: 0.01
+          maximum: 1000000
+        date:
+          type: string
+          format: date
+          example: 2025-06-01
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+        categoryId:
+          type: integer
+          readOnly: true
+        categoryColor:
+          type: string
+          readOnly: true
+      example:
+        id: 1
+        tripId: 1
+        category: Alimentação
+        description: Jantar no restaurante
+        amount: 120.5
+        date: 2025-06-03
+    ExpensesInput:
+      type: object
+      required:
+        - tripId
+        - description
+        - amount
+        - date
+      properties:
+        tripId:
+          type: integer
+          minimum: 1
+          description: ID de viagem (FK)
+        category:
+          type: string
+          description: Nome da categoria (GET /api/categories). Em POST, omitir ou enviar
+            "auto" faz a IA classificar.
+        description:
+          type: string
+          maxLength: 200
+        amount:
+          type: number
+          minimum: 0.01
+          maximum: 1000000
+        date:
+          type: string
+          format: date
+          example: 2025-06-01
+      example:
+        tripId: 1
+        category: Alimentação
+        description: Jantar no restaurante
+        amount: 120.5
+        date: 2025-06-03
+    Itinerary:
+      type: object
+      required:
+        - tripId
+        - date
+        - title
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        tripId:
+          type: integer
+          minimum: 1
+          description: ID de viagem (FK)
+        date:
+          type: string
+          format: date
+          example: 2025-06-01
+        title:
+          type: string
+          maxLength: 160
+        location:
+          type: string
+          maxLength: 160
+        estimatedCost:
+          type: number
+          minimum: 0
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+      example:
+        id: 1
+        tripId: 1
+        date: 2025-06-04
+        title: Magic Kingdom
+        location: Walt Disney World
+        estimatedCost: 680
+    ItineraryInput:
+      type: object
+      required:
+        - tripId
+        - date
+        - title
+      properties:
+        tripId:
+          type: integer
+          minimum: 1
+          description: ID de viagem (FK)
+        date:
+          type: string
+          format: date
+          example: 2025-06-01
+        title:
+          type: string
+          maxLength: 160
+        location:
+          type: string
+          maxLength: 160
+        estimatedCost:
+          type: number
+          minimum: 0
+      example:
+        tripId: 1
+        date: 2025-06-04
+        title: Magic Kingdom
+        location: Walt Disney World
+        estimatedCost: 680
+    Transports:
+      type: object
+      required:
+        - tripId
+        - type
+        - description
+        - amount
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        tripId:
+          type: integer
+          minimum: 1
+          description: ID de viagem (FK)
+        type:
+          type: string
+          maxLength: 60
+        description:
+          type: string
+          maxLength: 200
+        amount:
+          type: number
+          minimum: 0
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+      example:
+        id: 1
+        tripId: 1
+        type: Passagem aérea
+        description: Ida e volta GRU-MCO
+        amount: 1200
+    TransportsInput:
+      type: object
+      required:
+        - tripId
+        - type
+        - description
+        - amount
+      properties:
+        tripId:
+          type: integer
+          minimum: 1
+          description: ID de viagem (FK)
+        type:
+          type: string
+          maxLength: 60
+        description:
+          type: string
+          maxLength: 200
+        amount:
+          type: number
+          minimum: 0
+      example:
+        tripId: 1
+        type: Passagem aérea
+        description: Ida e volta GRU-MCO
+        amount: 1200
+    Insurances:
+      type: object
+      required:
+        - tripId
+        - provider
+        - coverage
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        tripId:
+          type: integer
+          minimum: 1
+          description: ID de viagem (FK)
+        provider:
+          type: string
+          maxLength: 120
+        coverage:
+          type: string
+          maxLength: 200
+        amount:
+          type: number
+          minimum: 0
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+      example:
+        id: 1
+        tripId: 1
+        provider: TravelSafe
+        coverage: Viagem internacional
+        amount: 180
+    InsurancesInput:
+      type: object
+      required:
+        - tripId
+        - provider
+        - coverage
+      properties:
+        tripId:
+          type: integer
+          minimum: 1
+          description: ID de viagem (FK)
+        provider:
+          type: string
+          maxLength: 120
+        coverage:
+          type: string
+          maxLength: 200
+        amount:
+          type: number
+          minimum: 0
+      example:
+        tripId: 1
+        provider: TravelSafe
+        coverage: Viagem internacional
+        amount: 180
+    Goals:
+      type: object
+      required:
+        - name
+        - targetAmount
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        userId:
+          type: integer
+          minimum: 1
+          description: ID de usuário (FK)
+        name:
+          type: string
+          maxLength: 120
+        targetAmount:
+          type: number
+          minimum: 0.01
+        currentAmount:
+          type: number
+          minimum: 0
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+        progress:
+          type: number
+          readOnly: true
+          description: Calculado (currentAmount / targetAmount)
+      example:
+        id: 1
+        name: Viagem Europa 2026
+        targetAmount: 15000
+        currentAmount: 6250
+    GoalsInput:
+      type: object
+      required:
+        - name
+        - targetAmount
+      properties:
+        userId:
+          type: integer
+          minimum: 1
+          description: ID de usuário (FK)
+        name:
+          type: string
+          maxLength: 120
+        targetAmount:
+          type: number
+          minimum: 0.01
+        currentAmount:
+          type: number
+          minimum: 0
+      example:
+        name: Viagem Europa 2026
+        targetAmount: 15000
+        currentAmount: 6250
+    Alerts:
+      type: object
+      required:
+        - tripId
+        - type
+        - title
+        - message
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        tripId:
+          type: integer
+          minimum: 1
+          description: ID de viagem (FK)
+        type:
+          type: string
+          enum:
+            - info
+            - warning
+            - danger
+        title:
+          type: string
+          maxLength: 160
+        message:
+          type: string
+          maxLength: 300
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+      example:
+        id: 1
+        tripId: 1
+        type: warning
+        title: Orçamento em 80%
+        message: Reveja os gastos de alimentação
+    AlertsInput:
+      type: object
+      required:
+        - tripId
+        - type
+        - title
+        - message
+      properties:
+        tripId:
+          type: integer
+          minimum: 1
+          description: ID de viagem (FK)
+        type:
+          type: string
+          enum:
+            - info
+            - warning
+            - danger
+        title:
+          type: string
+          maxLength: 160
+        message:
+          type: string
+          maxLength: 300
+      example:
+        tripId: 1
+        type: warning
+        title: Orçamento em 80%
+        message: Reveja os gastos de alimentação
+  responses:
+    BadRequest:
+      description: Requisição inválida (validação/JSON/parâmetros)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: Não encontrado
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Conflict:
+      description: Conflito (duplicidade ou registro em uso)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Unprocessable:
+      description: Regra de negócio ou referência inválida
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    RateLimited:
+      description: Limite de requisições excedido
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"

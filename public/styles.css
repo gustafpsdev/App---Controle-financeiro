@@ -316,3 +316,48 @@ button, select { font:inherit; }
 .settings-card label:not(.switch-row) select { display:block; width:100%; height:38px; margin-top:6px; border:1px solid #d9dddf; border-radius:7px; padding:0 10px; background:#fff; }
 @media (max-width: 1100px) { .itinerary-tools,.budget-overview,.settings-grid.three { grid-template-columns:1fr 1fr; } .report-detail-grid,.alert-summary,.mini-stats.four { grid-template-columns:repeat(2,1fr); } }
 @media print { .sidebar,.topbar,.section-head .button-group,.toolbar,.nav,.modal { display:none!important; } .content.section-mode > * { display:none!important; } .content.section-mode #section-reports { display:block!important; } }
+
+/* ===== CP2: dashboard dinâmico, IA, paginação ===== */
+#dashTripSelect { border:0; background:transparent; font:inherit; font-weight:700; color:var(--teal-dark); max-width:170px; cursor:pointer; }
+.chart { position:relative; }
+.chart-area svg text { font-size:9px; fill:#60676d; }
+.bar { fill:#4eaaa0; opacity:.85; }
+.budget-line { stroke:#c84242; stroke-width:1.5; stroke-dasharray:5 5; }
+.ai-panel { margin-top:20px; }
+.ai-panel .panel-title h3 { display:flex; align-items:center; gap:8px; }
+.ai-badge { font-size:9px; font-weight:700; padding:3px 7px; border-radius:5px; background:#eef0f2; color:#4d565b; }
+.ai-badge.llm { background:#ede7f8; color:#6b46b0; }
+.ai-badge.regras { background:#fdf1df; color:#9a5a05; }
+.primary-btn.small { height:32px; }
+.primary-btn:disabled { opacity:.6; cursor:wait; }
+.ai-body { padding:0 18px 12px; font-size:12px; line-height:1.55; }
+.ai-body .muted, .muted { color:var(--muted); }
+.ai-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:10px; }
+.ai-grid h4 { margin:0 0 6px; font-size:12px; }
+.ai-grid ul { margin:0; padding-left:18px; }
+.ai-health { display:inline-block; font-weight:700; padding:2px 8px; border-radius:5px; font-size:10px; text-transform:uppercase; }
+.ai-health.boa { background:#e3f4e8; color:#28743b; } .ai-health.atencao { background:#fdf1df; color:#9a5a05; } .ai-health.critica { background:#fbe5e5; color:var(--red); }
+.ai-data { padding:0 18px 14px; font-size:11px; color:var(--muted); }
+.ai-data pre { max-height:220px; overflow:auto; background:#f6f8f9; border-radius:8px; padding:10px; font-size:10px; }
+.skeleton { height:12px; border-radius:6px; background:linear-gradient(90deg,#eef1f2,#f8fafa,#eef1f2); background-size:200% 100%; animation:sk 1.2s infinite; margin:8px 0; }
+@keyframes sk { to { background-position:-200% 0; } }
+.pager { display:flex; justify-content:flex-end; align-items:center; gap:8px; padding:10px 4px 0; font-size:11px; color:var(--muted); }
+.pager button { height:28px; padding:0 10px; border:1px solid #d7dbdd; background:#fff; border-radius:6px; cursor:pointer; }
+.pager button:disabled { opacity:.4; cursor:default; }
+.input-with-btn { display:flex; gap:6px; align-items:center; }
+.input-with-btn input { flex:1; }
+.ai-hint { display:block; min-height:14px; font-size:10px; color:#6b46b0; margin:-6px 0 8px; }
+.alert-box .auto-tag, .full-alert .auto-tag { font-size:8px; font-weight:700; color:#6b46b0; background:#ede7f8; padding:1px 5px; border-radius:4px; margin-left:6px; vertical-align:middle; }
+.field-error { border-color:var(--red) !important; }
+@media (max-width: 900px) { .ai-grid { grid-template-columns:1fr; } }
+.content.section-mode > .ai-panel { display:none; }
+.table-panel table { width:100%; border-collapse:collapse; font-size:12px; }
+.table-panel th { text-align:left; font-size:11px; color:var(--muted); font-weight:600; padding:12px 14px; border-bottom:1px solid var(--border); background:#fafbfb; }
+.table-panel td { padding:10px 14px; border-bottom:1px solid #f0f2f3; vertical-align:middle; }
+.table-panel tr:hover td { background:#fafcfc; }
+.table-panel .text-btn { margin-right:4px; }
+.modal-box form { display:grid; gap:12px; }
+.modal-box label { display:grid; gap:5px; font-size:12px; font-weight:600; color:#3f474d; }
+.modal-box input, .modal-box select { width:100%; box-sizing:border-box; font:inherit; font-weight:400; }
+.modal-box .input-with-btn input { width:auto; }
+.ai-hint { margin:-4px 0 0; }

@@ -42,19 +42,19 @@
           <div class="hamburger">☰</div>
           <div>
             <h1>Dashboard</h1>
-            <p>Bem-vinda, Giovanna! 👋</p>
+            <p id="welcomeText">Bem-vindo(a)! 👋</p>
           </div>
         </div>
 
         <div class="top-actions">
           <label class="trip-filter">
-            <span>Período: <b id="periodText">01/06/2025 - 31/07/2025</b></span>
-            <span>▣</span>
+            <span>Viagem: <select id="dashTripSelect" aria-label="Selecionar viagem"></select></span>
+            <span><b id="periodText">—</b></span>
           </label>
-          <button class="icon-button notification">♧<span>3</span></button>
+          <button class="icon-button notification" onclick="navigate('alerts')" title="Alertas">♧<span id="alertBadge">0</span></button>
           <div class="profile">
-            <div class="avatar">GP</div>
-            <span>Giovanna Pereira</span>
+            <div class="avatar" id="profileAvatar">—</div>
+            <span id="profileName">Carregando…</span>
             <span>⌄</span>
           </div>
         </div>
@@ -70,7 +70,7 @@
               <p id="tripMeta">01/06/2025 até 15/06/2025 <span>•</span> 2 viajantes</p>
             </div>
             <span class="status" id="tripStatus">Em andamento</span>
-            <button class="outline-btn">Ver detalhes da viagem</button>
+            <button class="outline-btn" onclick="navigate('trips')">Ver detalhes da viagem</button>
           </article>
 
           <article class="budget-card">
@@ -86,79 +86,73 @@
             <div class="donut-wrap">
               <div class="donut"><div><b id="donutPercent">60,6%</b><span>do orçamento</span></div></div>
             </div>
-            <div class="daily-budget">Orçamento diário restante: <b>R$ 209,95</b> ⓘ</div>
+            <div class="daily-budget">Orçamento diário restante: <b id="dailyRemaining">—</b> <span title="Saldo dividido pelos dias restantes da viagem">ⓘ</span></div>
           </article>
         </div>
 
         <div class="summary-cards">
           <article class="summary-card green">
             <div class="summary-icon">▰</div>
-            <div><small>Total Gasto</small><strong id="totalSpentCard">R$ 4.850,75</strong><span>de R$ 8.000,00</span></div>
+            <div><small>Total Gasto</small><strong id="totalSpentCard">—</strong><span id="totalSpentOf">—</span></div>
           </article>
           <article class="summary-card blue">
             <div class="summary-icon">▥</div>
-            <div><small>Média Diária</small><strong id="dailyAverage">R$ 323,38</strong><span>por dia de viagem</span></div>
+            <div><small>Média Diária</small><strong id="dailyAverage">—</strong><span id="dailyAverageHint">por dia de viagem</span></div>
           </article>
           <article class="summary-card orange">
             <div class="summary-icon">◔</div>
-            <div><small>Maior Gasto</small><strong>Hospedagem</strong><span>R$ 2.100,00</span></div>
+            <div><small>Maior Categoria</small><strong id="topCategory">—</strong><span id="topCategoryValue">—</span></div>
           </article>
           <article class="summary-card purple">
             <div class="summary-icon">⌁</div>
-            <div><small>Score Financeiro</small><strong>85 / 100</strong><span>Muito bom! 🌟</span></div>
+            <div><small>Score Financeiro</small><strong id="scoreValue">—</strong><span id="scoreLabel">—</span></div>
           </article>
         </div>
+
+        <article class="panel ai-panel" id="aiPanel">
+          <div class="panel-title">
+            <h3>✨ Análise inteligente da viagem <span class="ai-badge" id="aiSource">IA</span></h3>
+            <button class="primary-btn small" id="aiGenerate">Gerar análise</button>
+          </div>
+          <div class="ai-body" id="aiBody"><p class="muted">Clique em <b>Gerar análise</b> para que a IA avalie orçamento, categorias e projeção desta viagem e sugira ações.</p></div>
+          <details class="ai-data"><summary>Dados enviados ao modelo (sem dados pessoais)</summary><pre id="aiDataSent">—</pre></details>
+        </article>
 
         <div class="middle-grid">
           <article class="panel categories">
             <div class="panel-title"><h3>Gastos por Categoria</h3></div>
             <div class="category-content">
-              <div class="pie" id="pie"><div class="pie-hole"><b>60,6%</b><span>utilizado</span></div></div>
+              <div class="pie" id="pie"><div class="pie-hole"><b id="pieUsage">—</b><span>utilizado</span></div></div>
               <div class="legend" id="categoryLegend"></div>
             </div>
           </article>
 
           <article class="panel evolution">
-            <div class="panel-title"><h3>Evolução dos Gastos</h3><select><option>Por dia</option></select></div>
-            <div class="chart">
-              <div class="y-axis"><span>10k</span><span>8k</span><span>6k</span><span>4k</span><span>2k</span><span>0</span></div>
-              <div class="chart-area">
-                <svg viewBox="0 0 680 260" preserveAspectRatio="none" aria-label="Evolução dos gastos">
-                  <g class="gridlines">
-                    <line x1="0" y1="18" x2="680" y2="18"/><line x1="0" y1="66" x2="680" y2="66"/>
-                    <line x1="0" y1="114" x2="680" y2="114"/><line x1="0" y1="162" x2="680" y2="162"/>
-                    <line x1="0" y1="210" x2="680" y2="210"/>
-                  </g>
-                  <polyline class="forecast" points="0,220 680,45"/>
-                  <polygon class="area" points="0,220 45,205 90,193 135,180 180,170 225,160 270,148 315,132 360,117 405,100 450,82 495,66 540,54 590,47 635,42 680,37 680,220"/>
-                  <polyline class="spent" points="0,220 45,205 90,193 135,180 180,170 225,160 270,148 315,132 360,117 405,100 450,82 495,66 540,54 590,47 635,42 680,37"/>
-                </svg>
-                <div class="x-axis"><span>01/06</span><span>03/06</span><span>05/06</span><span>07/06</span><span>09/06</span><span>11/06</span><span>13/06</span><span>15/06</span></div>
-              </div>
-            </div>
-            <div class="chart-legend"><span><i class="dot teal"></i>Gasto acumulado (R$)</span><span><i class="line"></i>Orçamento previsto (R$)</span></div>
+            <div class="panel-title"><h3>Evolução dos Gastos</h3><select id="evolutionMode"><option value="cumulative">Acumulado</option><option value="daily">Por dia</option></select></div>
+            <div class="chart" id="evolutionChart"><div class="empty-state">Carregando…</div></div>
+            <div class="chart-legend"><span><i class="dot teal"></i><span id="evolutionLegend">Gasto acumulado (R$)</span></span><span><i class="line"></i>Orçamento total (R$)</span></div>
           </article>
 
           <article class="alerts panel">
-            <div class="panel-title"><h3>Alertas</h3><a>Ver todos</a></div>
+            <div class="panel-title"><h3>Alertas</h3><a href="#alerts">Ver todos</a></div>
             <div id="alertsList"></div>
-            <button class="alert-config">♧ &nbsp; Configurar Alertas</button>
+            <button class="alert-config" data-open-modal="alertModal">♧ &nbsp; Novo alerta manual</button>
           </article>
         </div>
 
         <div class="lower-grid">
           <article class="panel itinerary">
-            <div class="panel-title"><h3>Próximas Atividades do Roteiro</h3><a>Ver roteiro completo</a></div>
+            <div class="panel-title"><h3>Próximas Atividades do Roteiro</h3><a href="#itinerary">Ver roteiro completo</a></div>
             <div id="itineraryList"></div>
           </article>
 
           <article class="panel goals">
-            <div class="panel-title"><h3>Metas de Economia</h3><a>Ver todas</a></div>
+            <div class="panel-title"><h3>Metas de Economia</h3><a href="#goals">Ver todas</a></div>
             <div id="goalsList"></div>
           </article>
 
           <article class="panel expenses">
-            <div class="panel-title"><h3>Últimas Despesas</h3><a>Ver todas</a></div>
+            <div class="panel-title"><h3>Últimas Despesas</h3><a href="#expenses">Ver todas</a></div>
             <table>
               <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Valor</th></tr></thead>
               <tbody id="expensesTable"></tbody>
@@ -183,8 +177,8 @@
         <section class="app-section" id="section-expenses">
           <div class="section-head"><div><h2>Despesas</h2><p>Registre, filtre e analise cada gasto feito durante as viagens.</p></div><button class="primary-btn" data-open-modal="expenseModal">+ Nova despesa</button></div>
           <div class="mini-stats four"><div><small>Total de lançamentos</small><b id="expenseCount">0</b></div><div><small>Valor total</small><b id="expenseTotal">R$ 0,00</b></div><div><small>Maior categoria</small><b id="expenseTopCategory">—</b></div><div><small>Maior despesa</small><b id="expenseLargest">R$ 0,00</b></div></div>
-          <div class="toolbar"><div class="search-box">⌕<input id="expenseSearch" placeholder="Buscar descrição..."></div><select id="expenseCategoryFilter"><option value="all">Todas as categorias</option><option>Hospedagem</option><option>Alimentação</option><option>Transporte</option><option>Passeios</option><option>Compras</option><option>Outros</option></select><select id="expenseTripFilter"><option value="all">Todas as viagens</option></select></div>
-          <div class="table-panel"><table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Viagem</th><th>Valor</th><th>Ações</th></tr></thead><tbody id="expensesFullTable"></tbody></table></div>
+          <div class="toolbar"><div class="search-box">⌕<input id="expenseSearch" placeholder="Buscar descrição..."></div><select id="expenseCategoryFilter"><option value="all">Todas as categorias</option><option>Hospedagem</option><option>Alimentação</option><option>Transporte</option><option>Passeios</option><option>Compras</option><option>Outros</option></select><select id="expenseTripFilter"><option value="all">Todas as viagens</option></select><select id="expenseSort"><option value="-date">Mais recentes</option><option value="date">Mais antigas</option><option value="-amount">Maior valor</option><option value="amount">Menor valor</option></select></div>
+          <div class="table-panel"><table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Viagem</th><th>Valor</th><th>Ações</th></tr></thead><tbody id="expensesFullTable"></tbody></table><div class="pager" id="expensesPager"></div></div>
         </section>
 
         <section class="app-section" id="section-itinerary">
@@ -221,7 +215,7 @@
         </section>
 
         <div class="functional-note">
-          <div><b>Backend REST ativo</b><span>Dados desta tela são carregados de <code>/api/dashboard?tripId=1</code>.</span></div>
+          <div><b>Backend REST ativo</b><span>Dados carregados de <code id="dashEndpoint">/api/dashboard</code> • <a href="/api/docs" target="_blank">Swagger</a></span></div>
           <span class="api-status" id="apiStatus">● conectado</span>
         </div>
       </section>
@@ -273,12 +267,14 @@
   <div class="modal" id="expenseModal">
     <div class="modal-box">
       <button class="modal-close" type="button">×</button>
-      <h3>Nova despesa</h3>
-      <form data-resource="expenses">
+      <h3 id="expenseModalTitle">Nova despesa</h3>
+      <form data-resource="expenses" id="expenseForm">
+        <input type="hidden" name="id">
         <div class="form-row">
           <label>ID da viagem<input name="tripId" type="number" min="1" placeholder="Ex.: 1" required></label>
           <label>Categoria
             <select name="category" required>
+              <option value="auto">✨ Automática (IA)</option>
               <option>Hospedagem</option>
               <option>Alimentação</option>
               <option>Transporte</option>
@@ -288,7 +284,8 @@
             </select>
           </label>
         </div>
-        <label>Descrição<input name="description" placeholder="Ex.: Jantar" required></label>
+        <label>Descrição<span class="input-with-btn"><input name="description" placeholder="Ex.: Uber até o aeroporto" maxlength="200" required><button type="button" class="text-btn" id="suggestCategory" title="Sugerir categoria com IA">✨ Sugerir</button></span></label>
+        <small class="ai-hint" id="categoryHint"></small>
         <div class="form-row">
           <label>Valor<input name="amount" type="number" step="0.01" min="0" required></label>
           <label>Data<input name="date" type="date" required></label>

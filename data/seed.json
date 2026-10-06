@@ -1,0 +1,216 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Giovanna Pereira",
+      "email": "giovanna@travelcash.local",
+      "avatar": "GP"
+    }
+  ],
+  "trips": [
+    {
+      "id": 1,
+      "name": "Orlando - Férias 2025",
+      "startDate": "2025-06-01",
+      "endDate": "2025-06-15",
+      "travelers": 2,
+      "status": "Em andamento",
+      "destination": "Orlando, EUA"
+    },
+    {
+      "id": 2,
+      "name": "Europa 2026",
+      "startDate": "2026-07-04",
+      "endDate": "2026-07-20",
+      "travelers": 2,
+      "status": "Planejamento",
+      "destination": "Paris, França"
+    }
+  ],
+  "budgets": [
+    {
+      "id": 1,
+      "tripId": 1,
+      "totalBudget": 8000,
+      "dailyBudget": 209.95
+    },
+    {
+      "id": 2,
+      "tripId": 2,
+      "totalBudget": 15000,
+      "dailyBudget": 300
+    }
+  ],
+  "expenses": [
+    {
+      "id": 1,
+      "tripId": 1,
+      "category": "Hospedagem",
+      "description": "Hotel",
+      "amount": 2100,
+      "date": "2025-05-20"
+    },
+    {
+      "id": 2,
+      "tripId": 1,
+      "category": "Alimentação",
+      "description": "Almoço - Restaurante",
+      "amount": 85,
+      "date": "2025-05-28"
+    },
+    {
+      "id": 3,
+      "tripId": 1,
+      "category": "Transporte",
+      "description": "Taxi - Aeroporto",
+      "amount": 120,
+      "date": "2025-05-27"
+    },
+    {
+      "id": 4,
+      "tripId": 1,
+      "category": "Passeios",
+      "description": "Ingresso - SeaWorld",
+      "amount": 230,
+      "date": "2025-05-26"
+    },
+    {
+      "id": 5,
+      "tripId": 1,
+      "category": "Alimentação",
+      "description": "Supermercado",
+      "amount": 156.75,
+      "date": "2025-05-25"
+    },
+    {
+      "id": 6,
+      "tripId": 1,
+      "category": "Passeios",
+      "description": "Magic Kingdom",
+      "amount": 270,
+      "date": "2025-05-24"
+    },
+    {
+      "id": 7,
+      "tripId": 1,
+      "category": "Compras",
+      "description": "Souvenirs",
+      "amount": 300,
+      "date": "2025-05-23"
+    },
+    {
+      "id": 8,
+      "tripId": 1,
+      "category": "Outros",
+      "description": "Taxas",
+      "amount": 200,
+      "date": "2025-05-22"
+    },
+    {
+      "id": 9,
+      "tripId": 1,
+      "category": "Alimentação",
+      "description": "Jantar",
+      "amount": 808.5,
+      "date": "2025-05-21"
+    },
+    {
+      "id": 10,
+      "tripId": 1,
+      "category": "Transporte",
+      "description": "Passagem local",
+      "amount": 580.5,
+      "date": "2025-05-20"
+    }
+  ],
+  "itinerary": [
+    {
+      "id": 1,
+      "tripId": 1,
+      "date": "2025-06-01",
+      "title": "Chegada em Orlando e check-in",
+      "location": "Aeroporto Internacional de Orlando",
+      "estimatedCost": 150
+    },
+    {
+      "id": 2,
+      "tripId": 1,
+      "date": "2025-06-02",
+      "title": "Magic Kingdom",
+      "location": "Walt Disney World",
+      "estimatedCost": 680
+    },
+    {
+      "id": 3,
+      "tripId": 1,
+      "date": "2025-06-03",
+      "title": "Universal Studios",
+      "location": "Universal Orlando Resort",
+      "estimatedCost": 620
+    }
+  ],
+  "transports": [
+    {
+      "id": 1,
+      "tripId": 1,
+      "type": "Passagem aérea",
+      "description": "Ida e volta",
+      "amount": 1200
+    },
+    {
+      "id": 2,
+      "tripId": 1,
+      "type": "Locomoção",
+      "description": "Uber/Taxi",
+      "amount": 700.5
+    }
+  ],
+  "insurances": [
+    {
+      "id": 1,
+      "tripId": 1,
+      "provider": "TravelSafe",
+      "coverage": "Viagem internacional",
+      "amount": 180
+    }
+  ],
+  "goals": [
+    {
+      "id": 1,
+      "name": "Viagem Europa 2026",
+      "targetAmount": 15000,
+      "currentAmount": 6250,
+      "progress": 41.7
+    },
+    {
+      "id": 2,
+      "name": "Reserva de Emergência",
+      "targetAmount": 5000,
+      "currentAmount": 2100,
+      "progress": 42
+    }
+  ],
+  "alerts": [
+    {
+      "id": 1,
+      "tripId": 1,
+      "type": "warning",
+      "title": "Você já utilizou 80% do orçamento de Alimentação.",
+      "message": "Hoje, 28/05/2025 - 10:30"
+    },
+    {
+      "id": 2,
+      "tripId": 1,
+      "type": "danger",
+      "title": "Você ultrapassou o limite de Passeios em R$ 120,00.",
+      "message": "Ontem, 27/05/2025 - 18:45"
+    },
+    {
+      "id": 3,
+      "tripId": 1,
+      "type": "info",
+      "title": "Faltam 5 dias para o término da sua viagem.",
+      "message": "Hoje, 28/05/2025 - 09:00"
+    }
+  ]
+}
