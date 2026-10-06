@@ -43,16 +43,6 @@ já foi consumido, a média diária e a projeção de custo final, **dispara ale
 orçamento, média diária acima do limite, projeção de estouro, concentração em uma categoria) e usa
 uma **LLM** para categorizar despesas e recomendar ações.
 
-## Integrantes
-
-| Nome | RM | Responsabilidade principal |
-|---|---|---|
-| Gustavo Paiva | _RM_ | Documentação (README/Swagger) |
-| _Nome_ | _RM_ | _…_ |
-| _Nome_ | _RM_ | _…_ |
-| _Nome_ | _RM_ | _…_ |
-| _Nome_ | _RM_ | _…_ |
-
 ## Tecnologias
 
 | Camada | Tecnologia |
