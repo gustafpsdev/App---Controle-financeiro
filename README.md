@@ -1,15 +1,17 @@
 # TravelCash — Controle Financeiro para Viagens ✈️💰
 
 > Projeto acadêmico FIAP • **Checkpoint 2** — Aplicação, Dashboard, Otimização e Inteligência Artificial
->
-> 
-> Grupo tropa de elte
-> Gustavo paiva - RM 572249
-> Maria Eduarda Soares- RM 572612
-> Arthur Costa Donaire  - RM 571283
-> Giovanna pereira - RM 570989
-> Felipe pereira - RM 573262
 
+
+**Grupo Tropa de Elite**
+
+| Nome | RM |
+|---|---|
+| Arthur Costa Donaire | 571283 |
+| Felipe Pereira | 573262 |
+| Giovanna Pereira | 570989 |
+| Gustavo Paiva | 572249 |
+| Maria Eduarda Soares | 572612 |
 
 Aplicação full-stack para planejar e acompanhar os gastos de uma viagem: orçamento, despesas por
 categoria, roteiro, metas de economia e alertas — com **dashboard em tempo real** e **IA (LLM)**
