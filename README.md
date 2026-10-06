@@ -4,11 +4,11 @@
 >
 > 
 > Grupo tropa de elte
-> Gustavo paiva silva - RM
-> Maria Eduarda - RM
-> Arthur  - RM 
-> Giovanna pereira - RM
-> Felipe pereira - RM
+> Gustavo paiva - RM 572249
+> Maria Eduarda Soares- RM 572612
+> Arthur Costa Donaire  - RM 571283
+> Giovanna pereira - RM 570989
+> Felipe pereira - RM 573262
 
 
 Aplicação full-stack para planejar e acompanhar os gastos de uma viagem: orçamento, despesas por
