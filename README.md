@@ -1,6 +1,8 @@
 # TravelCash — Controle Financeiro para Viagens ✈️💰
 
 > Projeto acadêmico FIAP • **Checkpoint 2** — Aplicação, Dashboard, Otimização e Inteligência Artificial
+>
+> 
 > Grupo tropa de elte
 > Gustavo paiva silva - RM
 > Maria Eduarda - RM
